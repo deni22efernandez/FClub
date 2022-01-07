@@ -23,7 +23,7 @@ namespace FClub.Models.Models
 		public double FreePass { get; set; }
 		[Required]
 		public int FromToPeriodId { get; set; }
-		[ForeignKey("FromToPeriod")]
+		[ForeignKey("FromToPeriodId")]
 		public FromToPeriod FromToPeriod { get; set; }
 		public virtual ICollection<Enrollment> Enrollments { get; set; }
 	}
