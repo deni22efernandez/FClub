@@ -17,6 +17,6 @@ namespace FClub.Models.Models
 		public string EnrollmentDate { get; set; }
 		public ICollection<Enrollment> Enrollments { get; set; }
 		
-	}
+	
 	}
 }
