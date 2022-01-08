@@ -1,4 +1,5 @@
-﻿using FClub.Models;
+﻿using FClub.Data;
+using FClub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,7 +19,7 @@ namespace FClub.Controllers
 			_logger = logger;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
 			return View();
 		}

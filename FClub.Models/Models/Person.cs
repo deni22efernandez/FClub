@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FClub.Models.Models
 {
-	public class Person
+	public abstract class Person
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
@@ -15,9 +15,9 @@ namespace FClub.Models.Models
 		public string Mobile { get; set; }
 		public string Address { get; set; }
 		[Required]
-		public string Username { get; set; }
+		public abstract string Username { get; set; }
 		[Required]
 		[DataType(DataType.Password)]
-		public string Password { get; set; }
+		public abstract string Password { get; set; }
 	}
 }
