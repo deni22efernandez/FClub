@@ -1,4 +1,6 @@
 using FClub.Data;
+using FClub.Data.Repository;
+using FClub.Data.Repository.IRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +29,7 @@ namespace FClub
 		{
 			services.AddDbContext<ApplicationDbContext>(x => 
 				x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddControllersWithViews();
 		}
 
