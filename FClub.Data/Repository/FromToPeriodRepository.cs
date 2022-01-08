@@ -14,9 +14,9 @@ namespace FClub.Data.Repository
 		{
 			_dbContext = dbContext;
 		}
-		public Task<bool> UpdateAsync(FromToPeriod fromToPeriod)
+		public void Update(FromToPeriod fromToPeriod)
 		{
-			throw new NotImplementedException();
+			_dbContext.Entry<FromToPeriod>(fromToPeriod).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
 		}
 	}
 }

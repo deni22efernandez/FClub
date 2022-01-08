@@ -8,6 +8,6 @@ namespace FClub.Data.Repository.IRepository
 {
 	public interface IActivittyRepository:IRepository<Activitty>
 	{
-		Task<bool> UpdateAsync(Activitty activitty);
+		void Update(Activitty activitty);
 	}
 }

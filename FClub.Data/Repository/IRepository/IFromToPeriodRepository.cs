@@ -8,6 +8,6 @@ namespace FClub.Data.Repository.IRepository
 {
 	public interface IFromToPeriodRepository:IRepository<FromToPeriod>
 	{
-		Task<bool> UpdateAsync(FromToPeriod fromToPeriod); 
+		void Update(FromToPeriod fromToPeriod); 
 	}
 }

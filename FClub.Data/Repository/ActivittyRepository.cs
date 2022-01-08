@@ -14,9 +14,10 @@ namespace FClub.Data.Repository
 		{
 			_dbContext = dbContext;
 		}
-		public Task<bool> UpdateAsync(Activitty activitty)
+		public void Update(Activitty activitty)
 		{
-			throw new NotImplementedException();
+			_dbContext.Entry<Activitty>(activitty).State= Microsoft.EntityFrameworkCore.EntityState.Modified;
 		}
+
 	}
 }

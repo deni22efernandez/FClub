@@ -8,6 +8,6 @@ namespace FClub.Data.Repository.IRepository
 {
 	public interface IAppUserRepository:IRepository<AppUser>
 	{
-		Task<bool> UpdateAsync(AppUser appUser);
+		void Update(AppUser appUser);
 	}
 }

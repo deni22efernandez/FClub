@@ -8,6 +8,6 @@ namespace FClub.Data.Repository.IRepository
 {
 	public interface IShiftRepository:IRepository<Shift>
 	{
-		Task<bool> UpdateAsync(Shift shift);
+		void Update(Shift shift);
 	}
 }
