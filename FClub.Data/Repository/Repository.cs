@@ -51,19 +51,18 @@ namespace FClub.Data.Repository
 			}
 			return await query.ToListAsync();
 		}
-		public async Task<bool> CreateAsync(T entity)
+		public async Task CreateAsync(T entity)
 		{
-			return await _dbSet.AddAsync(entity) != null ? true : false;
+			 await _dbSet.AddAsync(entity);
 		}
-		public async Task<bool> DeleteAsync(T entity)
+		public async Task DeleteAsync(T entity)
 		{
 			var entt = await _dbSet.FindAsync(entity);
 			if (entt != null)
 			{
-				_dbSet.Remove(entt);
-				return true;
+				_dbSet.Remove(entt);				
 			}
-			return false;
+			
 		}
 	}
 }
