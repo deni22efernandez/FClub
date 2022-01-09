@@ -1,4 +1,5 @@
 ﻿using FClub.Data;
+using FClub.Data.Repository.IRepository;
 using FClub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

@@ -17,6 +17,7 @@ namespace FClub.Data.Repository
 			_context = context;
 			_dbSet = _context.Set<T>();
 		}
+		
 		public async Task<T> GetAync(Expression<Func<T, bool>> filter = null, string includeProperties = null)
 		{
 			IQueryable<T> query = _dbSet;
@@ -32,6 +33,7 @@ namespace FClub.Data.Repository
 				}
 			}
 			return await query.FirstOrDefaultAsync();
+			
 		}
 		public async Task<IEnumerable<T>> GetAllAync(Expression<Func<T, bool>> filter = null, string includeProperties = null)
 		{
