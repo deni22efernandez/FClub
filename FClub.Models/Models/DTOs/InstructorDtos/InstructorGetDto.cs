@@ -9,6 +9,7 @@ namespace FClub.Models.Models.DTOs.InstructorDtos
 		public  int Id { get; set; }
 		public  string Name { get; set; }
 		public string LastName { get; set; }
+		public string FullName { get { return this.Name + ", " + this.LastName; } }
 		public string ProfilePicture { get; set; }
 		public DateTime HireDate { get; set; }
 		public ICollection<Activitty> Activities { get; set; }
