@@ -27,4 +27,8 @@
     <ProjectReference Include="..\FClub.Data\FClub.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\profile\" />
+  </ItemGroup>
+
 </Project>

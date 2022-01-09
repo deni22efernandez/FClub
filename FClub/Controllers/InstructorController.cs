@@ -2,9 +2,11 @@
 using FClub.Data.Repository.IRepository;
 using FClub.Models.Models;
 using FClub.Models.Models.DTOs.InstructorDtos;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,9 +15,11 @@ namespace FClub.Controllers
 	public class InstructorController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		public InstructorController(IUnitOfWork unitOfWork)
+		private IWebHostEnvironment _hostEnvironment;
+		public InstructorController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
 		{
 			_unitOfWork = unitOfWork;
+			_hostEnvironment = hostEnvironment;
 		}
 		public async Task<IActionResult> Index()
 		{
@@ -34,6 +38,21 @@ namespace FClub.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				var files = HttpContext.Request.Form.Files;				
+
+				if (files != null)//upload picture
+				{
+					string fileName = Guid.NewGuid().ToString();
+					var webRoot = _hostEnvironment.WebRootPath;
+					string uploads = Path.Combine(webRoot + @"images\profile");
+					var extention = Path.GetExtension(files[0].FileName);
+
+					using(FileStream fileStream = new FileStream(Path.Combine(uploads,fileName+extention), FileMode.Create))
+					{
+						files[0].CopyTo(fileStream);
+					}
+					dto.ProfilePicture = @"\images\profile" + fileName + extention;
+				}
 				await _unitOfWork.InstructorRepository.CreateAsync(dto.Map<Instructor>());
 				if (await _unitOfWork.SaveAsync())
 					return RedirectToAction(nameof(Index));
@@ -56,6 +75,26 @@ namespace FClub.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				var files = HttpContext.Request.Form.Files;
+				if (files != null)
+				{
+					string fileName = Guid.NewGuid().ToString();
+					var extention = Path.GetExtension(files[0].FileName);
+					var webRootPath = _hostEnvironment.WebRootPath;
+					var uploads = Path.Combine(webRootPath + @"images\profile");
+
+					var oldPic = Path.Combine(webRootPath, dto.ProfilePicture.TrimStart('\\'));
+					if (oldPic!=null)
+					{
+						if (System.IO.File.Exists(oldPic))
+							System.IO.File.Delete(oldPic);
+					}
+					using(var fileStream = new FileStream(Path.Combine(uploads, fileName+extention), FileMode.Create))
+					{
+						files[0].CopyTo(fileStream);
+					}
+					dto.ProfilePicture = @"\images\profile" + fileName + extention;
+				}
 				_unitOfWork.InstructorRepository.Update(dto.Map<Instructor>());
 				if (await _unitOfWork.SaveAsync())
 					return RedirectToAction(nameof(Index));
