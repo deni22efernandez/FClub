@@ -103,5 +103,24 @@ namespace FClub.Controllers
 			}
 			return View(dto);
 		}
+		#region		
+		[HttpDelete("{id:int}")]
+		public async Task<IActionResult> DeleteAsync(int id)
+		{
+			var toDelete = await _unitOfWork.InstructorRepository.GetAync(x => x.Id == id);
+			if (toDelete != null)
+			{
+				//elimnar picture
+				await _unitOfWork.InstructorRepository.DeleteAsync(toDelete);
+				if(await _unitOfWork.SaveAsync())
+				{
+					return new JsonResult("Delete successfull");
+				}
+				return new JsonResult("Delete went wrong");
+			}
+			return NotFound();
+		}
+		#endregion
+
 	}
 }

@@ -13,8 +13,8 @@ namespace FClub.Models.Models
 		public override string Mobile { get; set; }
 		public override string Address { get; set; }
 		public string About { get; set; }
-		public override string Username { get; set; }
-		public override string Password { get; set; }
+		//public override string Username { get; set; }
+		//public override string Password { get; set; }
 		public string ProfilePicture { get; set; }
 		public DateTime HireDate { get; set; }
 		public ICollection<Activitty> Activities { get; set; }

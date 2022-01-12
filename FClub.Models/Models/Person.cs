@@ -14,10 +14,10 @@ namespace FClub.Models.Models
 		public abstract string Email { get; set; }
 		public abstract string Mobile { get; set; }
 		public abstract string Address { get; set; }
-		[Required]
-		public abstract string Username { get; set; }
-		[Required]
+		//[Required]
+		public virtual string Username { get; set; }
+		//[Required]
 		[DataType(DataType.Password)]
-		public abstract string Password { get; set; }
+		public virtual string Password { get; set; }
 	}
 }
