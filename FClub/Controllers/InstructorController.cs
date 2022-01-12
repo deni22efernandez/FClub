@@ -2,6 +2,7 @@
 using FClub.Data.Repository.IRepository;
 using FClub.Models.Models;
 using FClub.Models.Models.DTOs.InstructorDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace FClub.Controllers
 {
+	//[Authorize(Roles ="Admin")]
 	public class InstructorController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
