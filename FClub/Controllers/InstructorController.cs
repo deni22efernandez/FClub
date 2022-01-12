@@ -44,14 +44,14 @@ namespace FClub.Controllers
 				{
 					string fileName = Guid.NewGuid().ToString();
 					var webRoot = _hostEnvironment.WebRootPath;
-					string uploads = Path.Combine(webRoot + @"images\profile");
+					string uploads = Path.Combine(webRoot, @"images\profile");
 					var extention = Path.GetExtension(files[0].FileName);
 
 					using(FileStream fileStream = new FileStream(Path.Combine(uploads,fileName+extention), FileMode.Create))
 					{
 						files[0].CopyTo(fileStream);
 					}
-					dto.ProfilePicture = @"\images\profile" + fileName + extention;
+					dto.ProfilePicture = @"\images\profile\" + fileName + extention;
 				}
 				await _unitOfWork.InstructorRepository.CreateAsync(dto.Map<Instructor>());
 				if (await _unitOfWork.SaveAsync())
@@ -81,7 +81,7 @@ namespace FClub.Controllers
 					string fileName = Guid.NewGuid().ToString();
 					var extention = Path.GetExtension(files[0].FileName);
 					var webRootPath = _hostEnvironment.WebRootPath;
-					var uploads = Path.Combine(webRootPath + @"images\profile");
+					var uploads = Path.Combine(webRootPath, @"images\profile");
 
 					var oldPic = Path.Combine(webRootPath, dto.ProfilePicture.TrimStart('\\'));
 					if (oldPic!=null)
@@ -93,7 +93,7 @@ namespace FClub.Controllers
 					{
 						files[0].CopyTo(fileStream);
 					}
-					dto.ProfilePicture = @"\images\profile" + fileName + extention;
+					dto.ProfilePicture = @"\images\profile\" + fileName + extention;
 				}
 				_unitOfWork.InstructorRepository.Update(dto.Map<Instructor>());
 				if (await _unitOfWork.SaveAsync())

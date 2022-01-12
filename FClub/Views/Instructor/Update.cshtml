@@ -52,6 +52,7 @@
 				<span asp-validation-for="HireDate" class="text-danger"></span>
 			</div>
 			<div class="form-group">
+				<input type="hidden" asp-for="ProfilePicture"/>
 				<label asp-for="ProfilePicture" class="control-label"></label>
 				<input type="file" multiple name="files" class="form-control" />
 				<span asp-validation-for="ProfilePicture" class="text-danger"></span>
@@ -64,7 +65,7 @@
 	@if (Model.ProfilePicture != null)
 	{
 		<div class="form-group">
-			<input asp-for="ProfilePicture" class="form-control" />			
+			<img src="@Model.ProfilePicture" class="img-fluid img-thumbnail" />			
 		</div>
 	}
 </div>
