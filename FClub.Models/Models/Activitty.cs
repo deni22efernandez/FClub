@@ -34,6 +34,7 @@ namespace FClub.Models.Models
 		[ForeignKey("FromToPeriodId")]
 		
 		public FromToPeriod FromToPeriod { get; set; }
+		public string Image { get; set; }
 		public virtual ICollection<Enrollment> Enrollments { get; set; }
 	}
 	public enum WeekDays
