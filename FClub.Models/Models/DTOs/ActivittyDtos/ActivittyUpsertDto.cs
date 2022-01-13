@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FClub.Models.Models.DTOs.ActivittyDtos
 {
-	public class ActivittyCreateDto
+	public class ActivittyUpsertDto
 	{
 		public int Id { get; set; }
 		[Display(Name = "Activity")]

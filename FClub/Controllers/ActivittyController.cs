@@ -39,9 +39,9 @@ namespace FClub.Controllers
 			var instructors = await _unitOfWork.InstructorRepository.GetAllAync();
 			var days = await _unitOfWork.WeekDaysRepository.GetAllAync();
 
-			ActivittyCreateVM model = new ActivittyCreateVM
+			ActivittyUpsertVM model = new ActivittyUpsertVM
 			{
-				Activity = new ActivittyCreateDto(),
+				Activity = new ActivittyUpsertDto(),
 				FromToPeriodList = periodList.Select(x => new SelectListItem
 				{
 					Text = x.Period,
@@ -63,7 +63,7 @@ namespace FClub.Controllers
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(ActivittyCreateVM model)
+		public async Task<IActionResult> Create(ActivittyUpsertVM model)
 		{
 			if (ModelState.IsValid)
 			{
@@ -121,6 +121,39 @@ namespace FClub.Controllers
 				Value = x.Id.ToString()
 			});
 
+			return View(model);
+		}
+		[HttpGet]
+		public async Task<IActionResult> Update(int id)
+		{
+			var activity = await _unitOfWork.ActivittyRepository.GetAync(x => x.Id == id, includeProperties:null);
+			var mappedact = activity.Map<ActivittyUpsertDto>();
+			var periods = await _unitOfWork.FromToPeriodRepository.GetAllAync();
+			var instructors = await _unitOfWork.InstructorRepository.GetAllAync();
+			var weekdays = await _unitOfWork.WeekDaysRepository.GetAllAync();
+			ActivittyUpsertVM model = new ActivittyUpsertVM
+			{
+				Activity = mappedact,
+				FromToPeriodList = periods.Select(x => new SelectListItem
+				{
+					Text = x.Period,
+					Value = x.Id.ToString(),
+					Selected = x.Id == activity.FromToPeriodId
+				}),
+				InstructorList = instructors.Select(x => new SelectListItem
+				{
+					Text = x.FulName,
+					Value = x.Id.ToString(),
+					Selected = x.Id == activity.InstructorId
+				}),
+				WeekDays = weekdays.Select(x => new SelectListItem
+				{
+					Text = x.WeekDay,
+					Value = x.Id.ToString(),
+					Selected = x.Id == 1 && x.Id == 3 && x.Id == 5
+
+				})
+			};
 			return View(model);
 		}
 
