@@ -19,7 +19,7 @@ namespace FClub.Controllers
 	public class ActivittyController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		private IWebHostEnvironment _hostEnv;
+		private readonly IWebHostEnvironment _hostEnv;
 		public ActivittyController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnv)
 		{
 			_unitOfWork = unitOfWork;
@@ -35,7 +35,8 @@ namespace FClub.Controllers
 		public async Task<IActionResult> CreateAsync()
 		{
 			var periodList = await _unitOfWork.FromToPeriodRepository.GetAllAync();
-			var instructors = await _unitOfWork.InstructorRepository.GetAllAync();		
+			var instructors = await _unitOfWork.InstructorRepository.GetAllAync();
+			//var days=await _unitOfWork.
 			
 			ActivittyCreateVM model = new ActivittyCreateVM
 			{
@@ -50,10 +51,7 @@ namespace FClub.Controllers
 					Text = x.FulName,
 					Value = x.Id.ToString()
 				}),
-				WeekDays = Enum.GetValues(typeof(Models.Models.WeekDays)).Cast<Models.Models.WeekDays>().Select(x=>new SelectListItem { 
-				Text=x.ToString(),
-				Value=((int)x).ToString()
-				}).ToList()
+				
 
 		};
 			return View(model);
@@ -95,11 +93,7 @@ namespace FClub.Controllers
 				Text = x.FulName,
 				Value = x.Id.ToString()
 			});
-			model.WeekDays = Enum.GetValues(typeof(WeekDays)).Cast<WeekDays>().Select(x => new SelectListItem
-			{
-				Text = x.ToString(),
-				Value = ((int)x).ToString()
-			}).ToList();
+			
 			
 			return View(model);
 		}

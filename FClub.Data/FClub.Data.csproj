@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20220108191016_..cs" />
     <Compile Remove="Migrations\20220108191016_..Designer.cs" />
+    <Compile Remove="Migrations\20220113134054_addActivittyDaysTable.cs" />
+    <Compile Remove="Migrations\20220113134054_addActivittyDaysTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

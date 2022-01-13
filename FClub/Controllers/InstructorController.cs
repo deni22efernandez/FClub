@@ -17,7 +17,7 @@ namespace FClub.Controllers
 	public class InstructorController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		private IWebHostEnvironment _hostEnvironment;
+		private readonly IWebHostEnvironment _hostEnvironment;
 		public InstructorController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
 		{
 			_unitOfWork = unitOfWork;

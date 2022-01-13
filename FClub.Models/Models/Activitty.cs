@@ -20,7 +20,7 @@ namespace FClub.Models.Models
 		[ForeignKey("InstructorId")]
 		public Instructor Instructor { get; set; }
 	
-		public WeekDays WeekDays { get; set; }
+		public ICollection<ActivittyDays> ActivittyDays { get; set; }
 	
 		public double PricePerClass { get; set; }
 	
@@ -37,8 +37,10 @@ namespace FClub.Models.Models
 		public string Image { get; set; }
 		public virtual ICollection<Enrollment> Enrollments { get; set; }
 	}
-	public enum WeekDays
+	public class WeekDays
 	{
-		Monday,Tuesday,Wednesday,Thursday,Friday
+		public int Id { get; set; }
+		public string WeekDay { get; set; }
+		public ICollection<ActivittyDays> ActivittyDays { get; set; }
 	}
 }

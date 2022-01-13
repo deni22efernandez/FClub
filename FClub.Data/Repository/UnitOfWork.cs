@@ -1,7 +1,4 @@
 ﻿using FClub.Data.Repository.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FClub.Data.Repository
@@ -18,6 +15,8 @@ namespace FClub.Data.Repository
 			FromToPeriodRepository = new FromToPeriodRepository(contxt);
 			InstructorRepository = new InstructorRepository(contxt);
 			ShiftRepository = new ShiftRepository(contxt);
+			WeekDaysRepository = new WeekDaysRepository(contxt);
+			ActivittyDaysRepository = new ActivittyDaysRepository(contxt);
 		}
 
 		public IActivittyRepository ActivittyRepository { get; private set; }
@@ -26,6 +25,10 @@ namespace FClub.Data.Repository
 		public IFromToPeriodRepository FromToPeriodRepository { get; private set; }
 		public IInstructorRepository InstructorRepository { get; private set; }
 		public IShiftRepository ShiftRepository { get; private set; }
+
+		public IWeekDaysRepository WeekDaysRepository { get; private set; }
+
+		public IActivittyDaysRepository ActivittyDaysRepository { get; private set; }
 
 		public void Dispose()
 		{
