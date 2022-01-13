@@ -1,5 +1,6 @@
 ﻿using FClub.CustomMapper;
 using FClub.Data.Repository.IRepository;
+using FClub.Models;
 using FClub.Models.Models;
 using FClub.Models.Models.DTOs.ActivittyDtos;
 using FClub.Models.Models.ViewModels;
@@ -36,8 +37,8 @@ namespace FClub.Controllers
 		{
 			var periodList = await _unitOfWork.FromToPeriodRepository.GetAllAync();
 			var instructors = await _unitOfWork.InstructorRepository.GetAllAync();
-			//var days=await _unitOfWork.
-			
+			var days = await _unitOfWork.WeekDaysRepository.GetAllAync();
+
 			ActivittyCreateVM model = new ActivittyCreateVM
 			{
 				Activity = new ActivittyCreateDto(),
@@ -51,7 +52,11 @@ namespace FClub.Controllers
 					Text = x.FulName,
 					Value = x.Id.ToString()
 				}),
-				
+				WeekDays = days.Select(x => new SelectListItem
+				{
+					Text = x.WeekDay,
+					Value = x.Id.ToString()
+				})			
 
 		};
 			return View(model);
@@ -63,7 +68,7 @@ namespace FClub.Controllers
 			if (ModelState.IsValid)
 			{
 				var files = HttpContext.Request.Form.Files;
-				if (files != null)
+				if (files.Count>0)
 				{
 					var rootPath = _hostEnv.WebRootPath;
 					var fileName = Guid.NewGuid().ToString();
@@ -76,13 +81,30 @@ namespace FClub.Controllers
 					}
 					model.Activity.Image = @"\images\activities\" + fileName + extention;
 				}
-				await _unitOfWork.ActivittyRepository.CreateAsync(model.Activity.Map<Activitty>());
-				//if(await _unitOfWork.SaveAsync())
-				//return RedirectToAction(nameof(Index));
+				model.Activity.CurrentCapacity = model.Activity.TotalCapacity;
+				var actCreated = model.Activity.Map<Activitty>();
+				await _unitOfWork.ActivittyRepository.CreateAsync(actCreated);
+				if (await _unitOfWork.SaveAsync())
+				{
+					foreach (var item in model.Activity.WeekDays)
+					{
+						ActivittyDays activittyDays = new ActivittyDays
+						{
+							ActivittyId = actCreated.Id,
+							WeekDayId = item
+
+						};
+						await _unitOfWork.ActivittyDaysRepository.CreateAsync(activittyDays);
+					}
+					
+					if (await _unitOfWork.SaveAsync())
+						return RedirectToAction(nameof(Index));
+				}
+					
 			}
 			var periodList = await _unitOfWork.FromToPeriodRepository.GetAllAync();
 			var instructors = await _unitOfWork.InstructorRepository.GetAllAync();
-
+			var days = await _unitOfWork.WeekDaysRepository.GetAllAync();
 			model.FromToPeriodList = periodList.Select(x => new SelectListItem
 			{
 				Text = x.Period,
@@ -93,8 +115,12 @@ namespace FClub.Controllers
 				Text = x.FulName,
 				Value = x.Id.ToString()
 			});
-			
-			
+			model.WeekDays = days.Select(x => new SelectListItem
+			{
+				Text = x.WeekDay,
+				Value = x.Id.ToString()
+			});
+
 			return View(model);
 		}
 

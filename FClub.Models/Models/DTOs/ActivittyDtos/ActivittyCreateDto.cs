@@ -7,6 +7,7 @@ namespace FClub.Models.Models.DTOs.ActivittyDtos
 {
 	public class ActivittyCreateDto
 	{
+		public int Id { get; set; }
 		[Display(Name = "Activity")]
 		public string ActivittyName { get; set; }
 		[Display(Name = "Total Capacity")]
@@ -16,7 +17,7 @@ namespace FClub.Models.Models.DTOs.ActivittyDtos
 		[Required]
 		public int InstructorId { get; set; }
 		[Display(Name = "Days")]
-		public ICollection<WeekDays> WeekDays { get; set; }
+		public ICollection<int> WeekDays { get; set; }//
 		[Display(Name = "Price per class")]
 		public double PricePerClass { get; set; }
 		[Display(Name = "Price per month")]
