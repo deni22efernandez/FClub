@@ -28,5 +28,6 @@ namespace FClub.Models.Models.DTOs.ActivittyDtos
 		[Required]
 		[Display(Name = "Time period")]
 		public int FromToPeriodId { get; set; }
+		public string Image { get; set; }
 	}
 }
