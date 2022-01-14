@@ -1,6 +1,7 @@
 using FClub.Data;
 using FClub.Data.Repository;
 using FClub.Data.Repository.IRepository;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,9 +28,17 @@ namespace FClub
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddDbContext<ApplicationDbContext>(x => 
+			services.AddDbContext<ApplicationDbContext>(x =>
 				x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+				.AddCookie(x =>
+				{
+					x.LoginPath = "/Account/Login";
+					x.AccessDeniedPath = "/AccessDenied";
+					x.Cookie.HttpOnly = true;
+					x.Cookie.IsEssential = true;
+				});
 			services.AddControllersWithViews();
 		}
 
@@ -50,7 +59,7 @@ namespace FClub
 			app.UseStaticFiles();
 
 			app.UseRouting();
-
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
