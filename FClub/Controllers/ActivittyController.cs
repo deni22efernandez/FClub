@@ -126,34 +126,103 @@ namespace FClub.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Update(int id)
 		{
-			var activity = await _unitOfWork.ActivittyRepository.GetAync(x => x.Id == id, includeProperties:null);
-			var mappedact = activity.Map<ActivittyUpsertDto>();
+			var daysSelected = await _unitOfWork.ActivittyDaysRepository.GetAllAync(x => x.ActivittyId == id);
+			var selected = daysSelected.Select(x => x.WeekDayId).ToList();
 			var periods = await _unitOfWork.FromToPeriodRepository.GetAllAync();
 			var instructors = await _unitOfWork.InstructorRepository.GetAllAync();
 			var weekdays = await _unitOfWork.WeekDaysRepository.GetAllAync();
-			ActivittyUpsertVM model = new ActivittyUpsertVM
+
+			ActivittyUpdateVM model = new ActivittyUpdateVM
 			{
-				Activity = mappedact,
+				Activity = await _unitOfWork.ActivittyRepository.GetAync(x => x.Id == id, includeProperties: null),
+				DaysSelected=selected,
 				FromToPeriodList = periods.Select(x => new SelectListItem
 				{
 					Text = x.Period,
-					Value = x.Id.ToString(),
-					Selected = x.Id == activity.FromToPeriodId
+					Value = x.Id.ToString()
 				}),
 				InstructorList = instructors.Select(x => new SelectListItem
 				{
 					Text = x.FulName,
-					Value = x.Id.ToString(),
-					Selected = x.Id == activity.InstructorId
+					Value = x.Id.ToString()
 				}),
 				WeekDays = weekdays.Select(x => new SelectListItem
 				{
 					Text = x.WeekDay,
 					Value = x.Id.ToString(),
-					Selected = x.Id == 1 && x.Id == 3 && x.Id == 5
-
+					Selected=selected.Contains(x.Id)//no los selecciona en la UI
 				})
 			};
+			return View(model);
+		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Update(ActivittyUpdateVM model)
+		{
+			if (ModelState.IsValid)
+			{
+				var files = HttpContext.Request.Form.Files;
+				if (files.Count>0)
+				{
+					var webRootPath = _hostEnv.WebRootPath;
+					var oldImg = model.Activity.Image;
+					
+					if (oldImg != null)
+					{						
+						var oldImgPath = Path.Combine(webRootPath,oldImg.TrimStart('\\'));//
+						if (System.IO.File.Exists(oldImgPath))
+						{
+							System.IO.File.Delete(oldImgPath);
+						}
+					}
+					var ImgName = Guid.NewGuid().ToString();
+					var extention = Path.GetExtension(files[0].FileName);
+					var uploads = Path.Combine(webRootPath,@"images\activities");				
+
+					using(var fileStream = new FileStream(Path.Combine(uploads,ImgName+extention), FileMode.Create))
+					{
+						files[0].CopyTo(fileStream);
+					}
+
+					model.Activity.Image = @"\images\activities\" + ImgName + extention;//
+				}
+				List<ActivittyDays> activitties = new List<ActivittyDays>();
+				foreach (var item in model.DaysSelected)
+				{
+					ActivittyDays activittyDays = new ActivittyDays
+					{
+						ActivittyId = model.Activity.Id,
+						WeekDayId = item
+					};
+					activitties.Add(activittyDays);
+					
+				}
+				await _unitOfWork.ActivittyDaysRepository.UpdateAsync(model.Activity.Id, activitties);
+				_unitOfWork.ActivittyRepository.Update(model.Activity);
+				if(await _unitOfWork.SaveAsync())
+				{
+					return RedirectToAction(nameof(Index));
+				}
+				//else tempadata error
+			}
+			var periods = await _unitOfWork.FromToPeriodRepository.GetAllAync();
+			var instructors = await _unitOfWork.InstructorRepository.GetAllAync();
+			var weekdays = await _unitOfWork.WeekDaysRepository.GetAllAync();
+			model.FromToPeriodList = periods.Select(x => new SelectListItem
+			{
+				Text = x.Period,
+				Value = x.Id.ToString()
+			});
+			model.InstructorList = instructors.Select(x => new SelectListItem
+			{
+				Text = x.FulName,
+				Value = x.Id.ToString()
+			});
+			model.WeekDays = weekdays.Select(x => new SelectListItem
+			{
+				Text = x.WeekDay,
+				Value = x.Id.ToString()
+			});
 			return View(model);
 		}
 
