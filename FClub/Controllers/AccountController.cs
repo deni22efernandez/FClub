@@ -27,7 +27,7 @@ namespace FClub.Controllers
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Login(LoginVM loginVM)
+		public async Task<IActionResult> Login(LoginVM loginVM, string returnUrl=null)
 		{
 			if (ModelState.IsValid)
 			{
@@ -45,6 +45,13 @@ namespace FClub.Controllers
 						await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
 														new ClaimsPrincipal(claimsIdentity));
 						//returnurl
+						if (returnUrl != null)
+						{
+							if (Url.IsLocalUrl(returnUrl))
+							{
+								return LocalRedirect(returnUrl);
+							}
+						}
 						return RedirectToAction("Index", "Home");
 					}
 					
