@@ -15,9 +15,9 @@ namespace FClub.Models.Models
 		public abstract string Mobile { get; set; }
 		public abstract string Address { get; set; }
 		//[Required]
-		public virtual string Username { get; set; }
+		public virtual string Username { get { return this.Username; } set { this.Username = value; } }
 		//[Required]
 		[DataType(DataType.Password)]
-		public virtual string Password { get; set; }
+		public virtual string Password { get { return this.Password; } set { this.Password = value; } }
 	}
 }

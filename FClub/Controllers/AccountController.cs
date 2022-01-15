@@ -1,4 +1,6 @@
-﻿using FClub.Data.Repository.IRepository;
+﻿using FClub.CustomMapper;
+using FClub.Data.Repository.IRepository;
+using FClub.Models.Models;
 using FClub.Models.Models.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -27,12 +29,12 @@ namespace FClub.Controllers
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Login(LoginVM loginVM, string returnUrl=null)
+		public async Task<IActionResult> LoginAsync(LoginVM loginVM, string returnUrl = null)
 		{
 			if (ModelState.IsValid)
 			{
 				bool isAuthenticated = false;
-				var user=await _unitOfWork.AppUserRepository.GetAync(x => x.Username == loginVM.Username && x.Password == loginVM.Password);
+				var user = await _unitOfWork.AppUserRepository.GetAync(x => x.Username == loginVM.Username && x.Password == loginVM.Password);
 				if (user != null)
 				{
 					ClaimsIdentity claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -42,7 +44,7 @@ namespace FClub.Controllers
 					isAuthenticated = true;
 					if (isAuthenticated)
 					{
-						await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
+						await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
 														new ClaimsPrincipal(claimsIdentity));
 						//returnurl
 						if (returnUrl != null)
@@ -54,10 +56,36 @@ namespace FClub.Controllers
 						}
 						return RedirectToAction("Index", "Home");
 					}
-					
+
 				}
 			}
 			return View(new LoginVM());
+		}
+		[HttpGet]
+		public IActionResult Register()
+		{
+			return View(new RegisterVM());
+		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult>Register(RegisterVM registerVM)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = await _unitOfWork.AppUserRepository.GetAync(x => x.Username == registerVM.Username);
+				if (user == null)
+				{
+					AppUser newUser = new AppUser { Username = registerVM.Username, Password = registerVM.Password };
+					await _unitOfWork.AppUserRepository.CreateAsync(newUser);
+					if (await _unitOfWork.SaveAsync())
+						//successfull registration msg
+						return RedirectToAction(nameof(Login));
+				}
+				//user already exists!
+				ModelState.AddModelError("error", "User alredy exists!");
+			}
+			//error msg
+			return View(registerVM);
 		}
 	}
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FClub.Models.Models
 {
-	public class AppUser:Person
+	public class AppUser : Person
 	{
 		public override int Id { get; set; }
 		public override string Name { get; set; }
@@ -16,6 +16,7 @@ namespace FClub.Models.Models
 		[Required]
 		public override string Username { get; set; }
 		[Required]
+		[DataType(DataType.Password)]
 		public override string Password { get; set; }
 		public string EnrollmentDate { get; set; }
 		public ICollection<Enrollment> Enrollments { get; set; }
