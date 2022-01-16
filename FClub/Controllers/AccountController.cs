@@ -87,5 +87,10 @@ namespace FClub.Controllers
 			//error msg
 			return View(registerVM);
 		}
+		[HttpGet]
+		public IActionResult AccessDenied()
+		{
+			return View();
+		}
 	}
 }

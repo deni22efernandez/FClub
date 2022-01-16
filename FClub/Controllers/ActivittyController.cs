@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace FClub.Controllers
 {
-	[Authorize(Roles ="Admin")]
+	
 	public class ActivittyController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -31,6 +31,8 @@ namespace FClub.Controllers
 		{
 			return View(await _unitOfWork.ActivittyRepository.GetAllAync(includeProperties: "FromToPeriod"));
 		}
+
+		
 		[HttpGet]
 		[ActionName("Create")]
 		public async Task<IActionResult> CreateAsync()
@@ -61,6 +63,8 @@ namespace FClub.Controllers
 		};
 			return View(model);
 		}
+
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(ActivittyUpsertVM model)
@@ -123,6 +127,8 @@ namespace FClub.Controllers
 
 			return View(model);
 		}
+
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public async Task<IActionResult> Update(int id)
 		{
@@ -155,6 +161,8 @@ namespace FClub.Controllers
 			};
 			return View(model);
 		}
+
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Update(ActivittyUpdateVM model)

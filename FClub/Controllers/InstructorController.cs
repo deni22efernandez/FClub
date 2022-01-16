@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FClub.Controllers
 {
-	//[Authorize(Roles ="Admin")]
+
 	public class InstructorController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -28,11 +28,15 @@ namespace FClub.Controllers
 			var instructor = await _unitOfWork.InstructorRepository.GetAllAync();
 			return View(instructor.Map<IEnumerable<InstructorGetDto>>());
 		}
+
+
 		[HttpGet]
 		public IActionResult Create()
 		{
 			return View(new InstructorCreateDto());
 		}
+
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[ActionName("Create")]
@@ -63,6 +67,8 @@ namespace FClub.Controllers
 			}
 			return View(dto);
 		}
+
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public async Task<IActionResult> Update(int id)
 		{
@@ -71,6 +77,8 @@ namespace FClub.Controllers
 				return View(instructor.Map<InstructorUpdateDto>());
 			return NotFound();
 		}
+
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> UpdateAsync(InstructorUpdateDto dto)

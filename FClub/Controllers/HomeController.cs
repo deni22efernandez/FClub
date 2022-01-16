@@ -1,4 +1,5 @@
 ﻿using FClub.Data;
+using FClub.Data.Repository;
 using FClub.Data.Repository.IRepository;
 using FClub.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,16 +14,22 @@ namespace FClub.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
+		//private readonly ILogger<HomeController> _logger;
+		private readonly IUnitOfWork _unitOfWork;
 
-		public HomeController(ILogger<HomeController> logger)
+		public HomeController(IUnitOfWork unitOfWork)
 		{
-			_logger = logger;
+			_unitOfWork = unitOfWork;	
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			return View();
+			var actList = await _unitOfWork.ActivittyRepository.GetAllAync(includeProperties: "Instructor,FromToPeriod,ActivittyDays");
+			foreach (var item in actList)
+			{
+				item.ActivittyDays = (ICollection<ActivittyDays>)await _unitOfWork.ActivittyDaysRepository.GetAllAync(includeProperties: "WeekDay");
+			}
+			return View(actList);
 		}
 
 		public IActionResult Privacy()
