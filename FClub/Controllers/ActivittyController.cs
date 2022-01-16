@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace FClub.Controllers
 {
-	//[Authorize(Roles ="Admin")]
+	[Authorize(Roles ="Admin")]
 	public class ActivittyController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -29,7 +29,7 @@ namespace FClub.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
-			return View(await _unitOfWork.ActivittyRepository.GetAllAync(includeProperties: "Instructor,FromToPeriod"));
+			return View(await _unitOfWork.ActivittyRepository.GetAllAync(includeProperties: "FromToPeriod"));
 		}
 		[HttpGet]
 		[ActionName("Create")]

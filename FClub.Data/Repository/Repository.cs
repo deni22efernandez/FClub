@@ -49,7 +49,8 @@ namespace FClub.Data.Repository
 					query = query.Include(item);
 				}
 			}
-			return await query.ToListAsync();
+			var result = await query.ToListAsync();
+			return result;
 		}
 		public async Task CreateAsync(T entity)
 		{
