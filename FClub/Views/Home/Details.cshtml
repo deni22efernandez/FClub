@@ -1,0 +1,65 @@
+﻿@model FClub.Models.Models.Activitty
+<div>
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-8">
+			
+				<div class="card text-center">
+					<form method="post">
+						<div class="card-header">
+							<input type="hidden" asp-for="@Model.Id" />
+							<input type="hidden" asp-for="@Model.InstructorId" />
+							<input type="hidden" asp-for="@Model.FromToPeriodId" />
+							<div class="py-3">
+								<span>@Model.ActivittyName</span>
+								<span class="btn btn-info offset-3" style="opacity:45%">FromToPeriod.Period</span>
+								@foreach (var items in Model.ActivittyDays)
+								{
+									<span class="btn btn-info" style="opacity:45%">@items.WeekDay.WeekDay</span>
+								}
+
+							</div>
+						</div>
+						<div class="card-body">
+							<div class="py-3">
+								<img src="@Model.Image" class="card-img img-fluid" style="width:auto;height:auto" />
+							</div>
+							<div class="card-columns py-3">
+								<label asp-for="@Model.Instructor" class="btn btn-info" style="opacity:45%"></label>&nbsp;
+								<span>@Model.Instructor.FulName</span>
+
+							</div>
+
+						</div>
+						<div class="card-footer">
+							<div class="py-3">
+								<div class="card-columns py-1">
+									<label asp-for="PricePerClass"></label>
+									<input type="hidden" asp-for="@Model.PricePerClass" />
+									<p>$@Model.PricePerClass </p>
+									<button type="submit" class=" btn btn-info">Add to cart</button>
+								</div>
+								<div class="card-columns py-1">
+									<label asp-for="PricePerMonth"></label>&nbsp;
+									<p>$@Model.PricePerMonth</p>
+									<a class=" btn btn-info">Add to cart</a>
+								</div>
+								<div class="card-columns py-1">
+									<label asp-for="PricePer3Months"></label>&nbsp;
+									<p>$@Model.PricePer3Months</p>
+									<a class=" btn btn-info">Add to cart</a>
+								</div>
+								<div class="card-columns py-1">
+									<label asp-for="FreePass"></label>&nbsp;
+									<p>$@Model.FreePass</p>
+									<a class=" btn btn-info">Add to cart</a>
+								</div>
+							</div>
+						</div>
+					</form>
+			
+		</div>
+		<div class="col-md-2"></div>
+	</div>
+</div>
+	</div>

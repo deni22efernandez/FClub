@@ -19,7 +19,7 @@ namespace FClub.Controllers
 
 		public HomeController(IUnitOfWork unitOfWork)
 		{
-			_unitOfWork = unitOfWork;	
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<IActionResult> Index()
@@ -32,6 +32,14 @@ namespace FClub.Controllers
 			return View(actList);
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> Details(int id)
+		{
+			var act = await _unitOfWork.ActivittyRepository.GetAync(includeProperties: "Instructor,FromToPeriod,ActivittyDays");
+			act.ActivittyDays = (ICollection<ActivittyDays>)await _unitOfWork.ActivittyDaysRepository.GetAllAync(includeProperties: "WeekDay");
+
+			return View(act);
+		}
 		public IActionResult Privacy()
 		{
 			return View();

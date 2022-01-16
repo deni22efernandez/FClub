@@ -18,6 +18,7 @@ namespace FClub.Models.Models
 		[Required]
 		public int InstructorId { get; set; }
 		[ForeignKey("InstructorId")]
+		[Display(Name ="Instructor")]
 		public Instructor Instructor { get; set; }
 	
 		public ICollection<ActivittyDays> ActivittyDays { get; set; }
