@@ -11,6 +11,7 @@ namespace FClub.Models.Models
 		public int Id { get; set; }
 		[Display(Name = "Activity")]
 		public string ActivittyName { get; set; }
+		public string Description { get; set; }
 		[Display(Name = "Total capacity")]
 		public int TotalCapacity { get; set; }
 		[Display(Name = "Current capacity")]
