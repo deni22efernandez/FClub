@@ -2,6 +2,9 @@
 using FClub.Data.Repository;
 using FClub.Data.Repository.IRepository;
 using FClub.Models;
+using FClub.Models.Models;
+using FClub.Models.Models.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -35,10 +38,26 @@ namespace FClub.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Details(int id)
 		{
+			//change model, add id to button price 4 addtocart amount
 			var act = await _unitOfWork.ActivittyRepository.GetAync(includeProperties: "Instructor,FromToPeriod,ActivittyDays");
 			act.ActivittyDays = (ICollection<ActivittyDays>)await _unitOfWork.ActivittyDaysRepository.GetAllAync(includeProperties: "WeekDay");
 
-			return View(act);
+			HomeDetailsVM homeDetailsVM = new HomeDetailsVM
+			{
+				Activity = act
+			};
+			return View(homeDetailsVM);
+		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Details(IFormCollection formCollection, HomeDetailsVM homeDetailsVM)
+		{
+			if (ModelState.IsValid)
+			{
+				var priceSelected = Convert.ToInt32(formCollection["radio"]);
+
+			}
+			return View(homeDetailsVM);
 		}
 		public IActionResult Privacy()
 		{
