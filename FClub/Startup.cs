@@ -40,6 +40,7 @@ namespace FClub
 					x.Cookie.IsEssential = true;
 				});
 			services.AddSession();
+			services.AddHttpContextAccessor();
 			services.AddControllersWithViews();
 		}
 
