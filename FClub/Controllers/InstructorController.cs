@@ -36,7 +36,7 @@ namespace FClub.Controllers
 			return View(new InstructorCreateDto());
 		}
 
-		[Authorize(Roles = "Admin")]
+		//[Authorize(Roles = "Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[ActionName("Create")]
@@ -46,7 +46,7 @@ namespace FClub.Controllers
 			{
 				var files = HttpContext.Request.Form.Files;				
 
-				if (files != null)//upload picture
+				if (files.Count()>0)//upload picture
 				{
 					string fileName = Guid.NewGuid().ToString();
 					var webRoot = _hostEnvironment.WebRootPath;
@@ -68,7 +68,7 @@ namespace FClub.Controllers
 			return View(dto);
 		}
 
-		[Authorize(Roles = "Admin")]
+		//[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public async Task<IActionResult> Update(int id)
 		{
@@ -78,7 +78,7 @@ namespace FClub.Controllers
 			return NotFound();
 		}
 
-		[Authorize(Roles = "Admin")]
+		//[Authorize(Roles = "Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> UpdateAsync(InstructorUpdateDto dto)
@@ -86,16 +86,17 @@ namespace FClub.Controllers
 			if (ModelState.IsValid)
 			{
 				var files = HttpContext.Request.Form.Files;
-				if (files != null)
+				if (files.Count()>0)
 				{
 					string fileName = Guid.NewGuid().ToString();
 					var extention = Path.GetExtension(files[0].FileName);
 					var webRootPath = _hostEnvironment.WebRootPath;
 					var uploads = Path.Combine(webRootPath, @"images\profile");
 
-					var oldPic = Path.Combine(webRootPath, dto.ProfilePicture.TrimStart('\\'));
-					if (oldPic!=null)
+					
+					if (dto.ProfilePicture != null)
 					{
+						var oldPic = Path.Combine(webRootPath, dto.ProfilePicture.TrimStart('\\'));
 						if (System.IO.File.Exists(oldPic))
 							System.IO.File.Delete(oldPic);
 					}
@@ -112,6 +113,11 @@ namespace FClub.Controllers
 					BadRequest();
 			}
 			return View(dto);
+		}
+		[HttpGet]
+		public async Task<IActionResult> Details(int id)
+		{
+			return View(await _unitOfWork.InstructorRepository.GetAsync(x => x.Id == id));
 		}
 		#region		
 		[HttpDelete("{id:int}")]
