@@ -3,7 +3,9 @@ using FClub.Data.Repository;
 using FClub.Data.Repository.IRepository;
 using FClub.Models;
 using FClub.Models.Models;
+using FClub.Models.Models.DTOs;
 using FClub.Models.Models.ViewModels;
+using FClub.SessionXtention;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -38,13 +40,21 @@ namespace FClub.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Details(int id)
 		{
-			//change model, add id to button price 4 addtocart amount
 			var act = await _unitOfWork.ActivittyRepository.GetAync(includeProperties: "Instructor,FromToPeriod,ActivittyDays");
 			act.ActivittyDays = (ICollection<ActivittyDays>)await _unitOfWork.ActivittyDaysRepository.GetAllAync(includeProperties: "WeekDay");
 
+			IList<ShoppingCart> carts = new List<ShoppingCart>();
+			if (HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart") != null &&
+				   HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").Count() > 0)
+			{
+				carts = HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").ToList();
+			}
+
 			HomeDetailsVM homeDetailsVM = new HomeDetailsVM
 			{
-				Activity = act
+				Activity = act,
+				PriceSelected=carts.Where(x=>x.ActivityId==id).Select(y=>y.PriceSelected).FirstOrDefault(),
+				InCart = carts.Select(x => x.ActivityId == id).FirstOrDefault()
 			};
 			return View(homeDetailsVM);
 		}
@@ -55,6 +65,36 @@ namespace FClub.Controllers
 			if (ModelState.IsValid)
 			{
 				var priceSelected = Convert.ToInt32(formCollection["radio"]);
+				var price = 0;
+				switch (priceSelected)
+				{
+					case 1:
+						price = homeDetailsVM.Activity.PricePerClass;
+						break;
+					case 2:
+						price = homeDetailsVM.Activity.PricePerMonth;
+						break;
+					case 3:
+						price = homeDetailsVM.Activity.PricePer3Months;
+						break;
+					case 4:
+						price = homeDetailsVM.Activity.FreePass;
+						break;
+				}
+
+				IList<ShoppingCart> cartList = new List<ShoppingCart>();
+				ShoppingCart cart = new ShoppingCart
+				{
+					ActivityId = homeDetailsVM.Activity.Id,
+					PriceSelected = price
+				};
+				cartList.Add(cart);
+
+
+				HttpContext.Session.SetSession<IEnumerable<ShoppingCart>>("sessionCart", cartList);
+
+				//cart setted!
+				return RedirectToAction(nameof(Index));
 
 			}
 			return View(homeDetailsVM);

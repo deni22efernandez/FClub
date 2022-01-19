@@ -8,5 +8,6 @@ namespace FClub.Models.Models.ViewModels
 	{
 		public Activitty Activity { get; set; }
 		public int PriceSelected { get; set; }
+		public bool InCart { get; set; }
 	}
 }

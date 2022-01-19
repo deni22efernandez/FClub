@@ -2,61 +2,91 @@
 <div>
 	<div class="row">
 		<div class="col-md-2"></div>
-		<div class="col-md-8">		
-				<div class="card text-center">
-					<form method="post">
-						<div class="card-header">
-							<input type="hidden" asp-for="@Model.Activity.Id" />
-							<input type="hidden" asp-for="@Model.Activity.InstructorId" />
-							<input type="hidden" asp-for="@Model.Activity.FromToPeriodId" />
-							<div class="py-3">
-								<span>@Model.Activity.ActivittyName</span>
-								<span class="btn btn-info offset-3" style="opacity:45%">@Model.Activity.FromToPeriod.Period</span>
-								@foreach (var items in Model.Activity.ActivittyDays)
-								{
-									<span class="btn btn-info" style="opacity:45%">@items.WeekDay.WeekDay</span>
-								}
+		<div class="col-md-8">
+			<div class="card text-center">
+				<form method="post">
+					<div class="card-header">
+						<input type="hidden" asp-for="@Model.Activity.Id" />
+						<input type="hidden" asp-for="@Model.Activity.InstructorId" />
+						<input type="hidden" asp-for="@Model.Activity.FromToPeriodId" />
+						<div class="py-3">
+							<span>@Model.Activity.ActivittyName</span>
+							<span class="btn btn-info offset-3" style="opacity:45%">@Model.Activity.FromToPeriod.Period</span>
+							@foreach (var items in Model.Activity.ActivittyDays)
+							{
+								<span class="btn btn-info" style="opacity:45%">@items.WeekDay.WeekDay</span>
+							}
 
-							</div>
 						</div>
-						<div class="card-body ">
-							<div class="py-3">
-								<img src="@Model.Activity.Image" class="card-img img-fluid" style="width:auto;height:auto" />
-							</div>
-							<div class="card-columns py-3">
-								<label asp-for="@Model.Activity.Instructor" style="opacity:45%"></label>&nbsp;
-								<a asp-action="Details" asp-controller="Instructor" asp-route-id="@Model.Activity.InstructorId" class="btn btn-info">@Model.Activity.Instructor.FulName</a>
-								<label asp-for="@Model.Activity.CurrentCapacity" style="opacity:45%"></label>&nbsp;
-								<span>@Model.Activity.CurrentCapacity</span>
-							</div>
-							<div>
-								<textarea asp-for="@Model.Activity.Description" class="border border-light"></textarea>
-							</div>
+					</div>
+					<div class="card-body ">
+						<div class="py-3">
+							<img src="@Model.Activity.Image" class="card-img img-fluid" style="width:auto;height:auto" />
 						</div>
-						<div class="card-footer text-left">
+						<div class="card-columns py-3">
+							<label asp-for="@Model.Activity.Instructor" style="opacity:45%"></label>&nbsp;
+							<a asp-action="Details" asp-controller="Instructor" asp-route-id="@Model.Activity.InstructorId" class="btn btn-info">@Model.Activity.Instructor.FulName</a>
+							<label asp-for="@Model.Activity.CurrentCapacity" style="opacity:45%"></label>&nbsp;
+							<span>@Model.Activity.CurrentCapacity</span>
+						</div>
+						<div>
+							<textarea asp-for="@Model.Activity.Description" class="border border-light"></textarea>
+						</div>
+					</div>
+					<div class="card-footer text-left">
+						@if (!Model.InCart)
+						{
 							<div class="py-3">
 								<div class="card-columns py-1">
 									<label asp-for="@Model.Activity.PricePerClass"></label>&nbsp;
+									<input type="hidden" asp-for="@Model.Activity.PricePerClass" />
 									<span>$@Model.Activity.PricePerClass </span>&nbsp;
 									<input type="radio" name="radio" value="1" asp-for="@Model.PriceSelected" class="form-check-inline" />
 									<label asp-for="@Model.Activity.PricePerMonth"></label>&nbsp;
+									<input type="hidden" asp-for="@Model.Activity.PricePerMonth" />
 									<span>$@Model.Activity.PricePerMonth</span>&nbsp;
 									<input type="radio" name="radio" value="2" asp-for="@Model.PriceSelected" class="form-check-inline" />
 									<label asp-for="@Model.Activity.PricePer3Months"></label>&nbsp;
+									<input type="hidden" asp-for="@Model.Activity.PricePer3Months" />
 									<span>$@Model.Activity.PricePer3Months</span>
 									<input type="radio" name="radio" value="3" asp-for="@Model.PriceSelected" class="form-check-inline" />
 									<label asp-for="@Model.Activity.FreePass"></label>&nbsp;
+									<input type="hidden" asp-for="@Model.Activity.FreePass" />
 									<span>$@Model.Activity.FreePass</span>&nbsp;
 									<input type="radio" name="radio" asp-for="@Model.PriceSelected" value="4" class="form-check-inline" />
 									<button type="submit" class="form-control btn btn-info">Add to cart</button>
 								</div>
-								
+
 							</div>
-						</div>
-					</form>
-			
+						}
+						else
+						{
+							<div class="py-3">
+								<div class="card-columns py-1">
+									<label asp-for="@Model.Activity.PricePerClass"></label>&nbsp;
+									<span>$@Model.Activity.PricePerClass </span>&nbsp;
+									<input type="radio" name="radio" value="1" asp-for="@Model.PriceSelected" class="form-check-inline" disabled/>
+									<label asp-for="@Model.Activity.PricePerMonth"></label>&nbsp;
+									<span>$@Model.Activity.PricePerMonth</span>&nbsp;
+									<input type="radio" name="radio" value="2" asp-for="@Model.PriceSelected" class="form-check-inline" disabled/>
+									<label asp-for="@Model.Activity.PricePer3Months"></label>&nbsp;
+									<span>$@Model.Activity.PricePer3Months</span>
+									<input type="radio" name="radio" value="3" asp-for="@Model.PriceSelected" class="form-check-inline" disabled />
+									<label asp-for="@Model.Activity.FreePass"></label>&nbsp;
+									<span>$@Model.Activity.FreePass</span>&nbsp;
+									<input type="radio" name="radio" asp-for="@Model.PriceSelected" value="4" class="form-check-inline" disabled/>
+									<label class="text-danger">Item already in cart!. Selected price: $@Model.PriceSelected </label>
+									<a asp-controller="Cart" asp-action="Update" class="form-control btn btn-warning">Remove/Update cart</a>
+								</div>
+
+							</div>
+						}
+
+					</div>
+				</form>
+
+			</div>
+			<div class="col-md-2"></div>
 		</div>
-		<div class="col-md-2"></div>
 	</div>
 </div>
-	</div>

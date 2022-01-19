@@ -17,8 +17,8 @@ namespace FClub.SessionXtention
 		}
 		public static T GetSession<T>(this ISession session, string key)
 		{
-
-			return JsonSerializer.Deserialize<T>(session.GetString(key)) ?? default;
+			var value = session.GetString(key);
+			return value == null ? default : JsonSerializer.Deserialize<T>(value);
 
 		}
 	}
