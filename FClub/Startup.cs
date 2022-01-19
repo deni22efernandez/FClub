@@ -39,6 +39,7 @@ namespace FClub
 					x.Cookie.HttpOnly = true;
 					x.Cookie.IsEssential = true;
 				});
+			services.AddSession();
 			services.AddControllersWithViews();
 		}
 
@@ -61,7 +62,7 @@ namespace FClub
 			app.UseRouting();
 			app.UseAuthentication();
 			app.UseAuthorization();
-
+			app.UseSession();
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(
