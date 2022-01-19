@@ -34,7 +34,7 @@ namespace FClub.Controllers
 			if (ModelState.IsValid)
 			{
 				bool isAuthenticated = false;
-				var user = await _unitOfWork.AppUserRepository.GetAync(x => x.Username == loginVM.Username && x.Password == loginVM.Password);
+				var user = await _unitOfWork.AppUserRepository.GetAsync(x => x.Username == loginVM.Username && x.Password == loginVM.Password);
 				if (user != null)
 				{
 					ClaimsIdentity claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -72,7 +72,7 @@ namespace FClub.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var user = await _unitOfWork.AppUserRepository.GetAync(x => x.Username == registerVM.Username);
+				var user = await _unitOfWork.AppUserRepository.GetAsync(x => x.Username == registerVM.Username);
 				if (user == null)
 				{
 					AppUser newUser = new AppUser { Username = registerVM.Username, Password = registerVM.Password };

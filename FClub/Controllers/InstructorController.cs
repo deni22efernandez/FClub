@@ -72,7 +72,7 @@ namespace FClub.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Update(int id)
 		{
-			var instructor = await _unitOfWork.InstructorRepository.GetAync(x => x.Id == id);
+			var instructor = await _unitOfWork.InstructorRepository.GetAsync(x => x.Id == id);
 			if (instructor != null)
 				return View(instructor.Map<InstructorUpdateDto>());
 			return NotFound();
@@ -117,7 +117,7 @@ namespace FClub.Controllers
 		[HttpDelete("{id:int}")]
 		public async Task<IActionResult> DeleteAsync(int id)
 		{
-			var toDelete = await _unitOfWork.InstructorRepository.GetAync(x => x.Id == id);
+			var toDelete = await _unitOfWork.InstructorRepository.GetAsync(x => x.Id == id);
 			if (toDelete != null)
 			{
 				//elimnar picture

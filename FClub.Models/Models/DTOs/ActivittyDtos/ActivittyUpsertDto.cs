@@ -19,13 +19,13 @@ namespace FClub.Models.Models.DTOs.ActivittyDtos
 		[Display(Name = "Days")]
 		public ICollection<int> WeekDays { get; set; }//
 		[Display(Name = "Price per class")]
-		public double PricePerClass { get; set; }
+		public int PricePerClass { get; set; }
 		[Display(Name = "Price per month")]
-		public double PricePerMonth { get; set; }
+		public int PricePerMonth { get; set; }
 		[Display(Name = "Price per 3 months")]
-		public double PricePer3Months { get; set; }
+		public int PricePer3Months { get; set; }
 		[Display(Name = "Free pass")]
-		public double FreePass { get; set; }
+		public int FreePass { get; set; }
 		[Required]
 		[Display(Name = "Time period")]
 		public int FromToPeriodId { get; set; }

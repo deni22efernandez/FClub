@@ -32,7 +32,7 @@ namespace FClub.Controllers
 			var actList = await _unitOfWork.ActivittyRepository.GetAllAync(includeProperties: "Instructor,FromToPeriod,ActivittyDays");
 			foreach (var item in actList)
 			{
-				item.ActivittyDays = (ICollection<ActivittyDays>)await _unitOfWork.ActivittyDaysRepository.GetAllAync(includeProperties: "WeekDay");
+				item.ActivittyDays = (ICollection<ActivittyDays>)await _unitOfWork.ActivittyDaysRepository.GetAllAync(x => x.ActivittyId == item.Id, includeProperties: "WeekDay");
 			}
 			return View(actList);
 		}
@@ -40,8 +40,8 @@ namespace FClub.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Details(int id)
 		{
-			var act = await _unitOfWork.ActivittyRepository.GetAync(includeProperties: "Instructor,FromToPeriod,ActivittyDays");
-			act.ActivittyDays = (ICollection<ActivittyDays>)await _unitOfWork.ActivittyDaysRepository.GetAllAync(includeProperties: "WeekDay");
+			var act = await _unitOfWork.ActivittyRepository.GetAsync(x => x.Id == id, includeProperties: "Instructor,FromToPeriod,ActivittyDays");
+			act.ActivittyDays = (ICollection<ActivittyDays>)await _unitOfWork.ActivittyDaysRepository.GetAllAync(x => x.ActivittyId == id, includeProperties: "WeekDay");
 
 			IList<ShoppingCart> carts = new List<ShoppingCart>();
 			if (HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart") != null &&
@@ -53,8 +53,8 @@ namespace FClub.Controllers
 			HomeDetailsVM homeDetailsVM = new HomeDetailsVM
 			{
 				Activity = act,
-				PriceSelected=carts.Where(x=>x.ActivityId==id).Select(y=>y.PriceSelected).FirstOrDefault(),
-				InCart = carts.Select(x => x.ActivityId == id).FirstOrDefault()
+				PriceSelected = carts.Where(x => x.ActivityId == id).Select(y => y.PriceSelected).FirstOrDefault(),
+				InCart = carts.Any(x=>x.ActivityId==id)
 			};
 			return View(homeDetailsVM);
 		}
@@ -82,16 +82,22 @@ namespace FClub.Controllers
 						break;
 				}
 
-				IList<ShoppingCart> cartList = new List<ShoppingCart>();
-				ShoppingCart cart = new ShoppingCart
+
+				IList<ShoppingCart> carts = new List<ShoppingCart>();
+				if (HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart") != null &&
+					   HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").Count() > 0)
+				{
+					carts = HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").ToList();
+				}
+
+				carts.Add(new ShoppingCart
 				{
 					ActivityId = homeDetailsVM.Activity.Id,
 					PriceSelected = price
-				};
-				cartList.Add(cart);
+				});
 
+				HttpContext.Session.SetSession<IEnumerable<ShoppingCart>>("sessionCart", carts);
 
-				HttpContext.Session.SetSession<IEnumerable<ShoppingCart>>("sessionCart", cartList);
 
 				//cart setted!
 				return RedirectToAction(nameof(Index));

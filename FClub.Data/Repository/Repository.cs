@@ -18,7 +18,7 @@ namespace FClub.Data.Repository
 			_dbSet = _context.Set<T>();
 		}
 		
-		public async Task<T> GetAync(Expression<Func<T, bool>> filter = null, string includeProperties = null)
+		public async Task<T> GetAsync(Expression<Func<T, bool>> filter = null, string includeProperties = null)
 		{
 			IQueryable<T> query = _dbSet;
 			if (filter != null)

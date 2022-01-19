@@ -10,6 +10,6 @@ namespace FClub.Data.Repository.IRepository
 		Task CreateAsync(T entity);
 		Task DeleteAsync(T entity);
 		Task<IEnumerable<T>> GetAllAync(Expression<Func<T, bool>> filter = null, string includeProperties = null);
-		Task<T> GetAync(Expression<Func<T, bool>> filter = null, string includeProperties = null);
+		Task<T> GetAsync(Expression<Func<T, bool>> filter = null, string includeProperties = null);
 	}
 }
