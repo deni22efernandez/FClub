@@ -20,6 +20,8 @@ namespace FClub.Data
 		public DbSet<Shift> Shifts { get; set; }
 		public DbSet<ActivittyDays> ActivittyDays { get; set; }
 		public DbSet<WeekDays> WeekDays { get; set; }
+		public DbSet<OrderHeader> OrderHeaders { get; set; }
+		public DbSet<OrderDetail> OrderDetails { get; set; }
 
 	}
 }
