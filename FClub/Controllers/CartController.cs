@@ -31,6 +31,23 @@ namespace FClub.Controllers
 			
 			return View(sessionCarts);
 		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Index(IEnumerable<ShoppingCart> shoppingCarts)
+		{
+			if (ModelState.IsValid)
+			{
+				IList<ShoppingCart> carts = new List<ShoppingCart>();
+				if(HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCarts")!=null &&
+					HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCarts").Count() > 0)
+				{
+					carts = HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCarts").ToList();
+				}
+				//create orderheader
+				//enroll after confirmed
+			}
+			return View();
+		}
 		public IActionResult Remove(int id)
 		{
 			var sessionCarts = HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart") ?? default;

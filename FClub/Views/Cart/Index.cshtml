@@ -40,18 +40,20 @@
 											)
 										</td>
 										<td>
-											<a asp-action="Remove" asp-route-id="@item.ActivityId" class="btn btn-danger">Remove from cart</a>
+											<a asp-action="Remove" asp-route-id="@item.ActivityId" class="btn btn-danger">
+												<i class="fas fa-trash"></i>Remove from cart
+											</a>
 										</td>
 									</tr>
 								}
 							</tbody>
 						</table>
+						<div>
+							<label class="ml-3 text-danger">Total:</label>
+							<span class="ml-lg-5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$@total</span>
+							<button type="submit" class=" btn btn-outline-success offset-2">Continue</button>
+						</div>
 					</form>
-					<div>
-						<label class="ml-3 text-danger">Total:</label>
-						<span class="ml-lg-5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$@total</span>
-						<button type="submit" class=" btn btn-outline-success offset-2">Continue</button>
-					</div>
 				</div>
 			</div>
 		</div>

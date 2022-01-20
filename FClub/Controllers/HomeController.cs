@@ -67,8 +67,7 @@ namespace FClub.Controllers
 					TempData["radio"] = 2;
 				else
 					TempData["radio"] = 3;
-			}
-			
+			}		
 
 			return View(homeDetailsVM);
 		}
@@ -95,8 +94,6 @@ namespace FClub.Controllers
 						price = homeDetailsVM.Activity.FreePass;
 						break;
 				}
-
-
 				IList<ShoppingCart> carts = new List<ShoppingCart>();
 				if (HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart") != null &&
 					   HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").Count() > 0)
@@ -115,15 +112,11 @@ namespace FClub.Controllers
 						ActivityId = homeDetailsVM.Activity.Id,
 						PriceSelected = price
 					});
-				}
-				
+				}			
 
 				HttpContext.Session.SetSession<IEnumerable<ShoppingCart>>("sessionCart", carts);
-
-
 				//cart setted!
 				return RedirectToAction(nameof(Index));
-
 			}
 			return View(homeDetailsVM);
 		}
