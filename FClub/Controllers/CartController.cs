@@ -8,11 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace FClub.Controllers
 {
-	//[Authorize]
+	[Authorize]
 	public class CartController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -23,30 +24,38 @@ namespace FClub.Controllers
 		public async Task<IActionResult> Index()
 		{
 			var sessionCarts = HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart") ?? default;
-			
+
 			foreach (var item in sessionCarts)
 			{
-				item.Activity = await _unitOfWork.ActivittyRepository.GetAsync(x => x.Id == item.ActivityId, includeProperties:"FromToPeriod");				
+				item.Activity = await _unitOfWork.ActivittyRepository.GetAsync(x => x.Id == item.ActivityId, includeProperties: "FromToPeriod");
 			}
-			
+
 			return View(sessionCarts);
 		}
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public IActionResult Index(IEnumerable<ShoppingCart> shoppingCarts)
+		[HttpGet]
+		public async Task<IActionResult> Summary()
 		{
-			if (ModelState.IsValid)
+			IList<ShoppingCart> carts = new List<ShoppingCart>();
+			if (HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart") != null &&
+				HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").Count() > 0)
 			{
-				IList<ShoppingCart> carts = new List<ShoppingCart>();
-				if(HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCarts")!=null &&
-					HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCarts").Count() > 0)
-				{
-					carts = HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCarts").ToList();
-				}
+				carts = HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").ToList();
+			}
+			foreach (var item in carts)
+			{
+				item.Activity = await _unitOfWork.ActivittyRepository.GetAsync(x => x.Id == item.ActivityId);
+			}
+			var claim = (ClaimsIdentity)User.Identity;
+			var userId = Convert.ToInt32(claim.FindFirst(ClaimTypes.NameIdentifier).Value);
+			SummaryVM summaryVM = new SummaryVM
+			{
+				ShoppingCarts = carts,
+				AppUser = await _unitOfWork.AppUserRepository.GetAsync(x => x.Id == userId)
+			};
 				//create orderheader
 				//enroll after confirmed
-			}
-			return View();
+
+			return View(summaryVM);
 		}
 		public IActionResult Remove(int id)
 		{

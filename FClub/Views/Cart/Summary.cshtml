@@ -1,0 +1,63 @@
+﻿@model FClub.Models.Models.ViewModels.SummaryVM
+<div class="container-fluid">
+	<div class="card">
+		<div class="card-header">
+			<h3>Summary</h3>
+		</div>
+		<form method="post">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="card-group">
+							<label asp-for="@Model.AppUser.FulName"></label>
+							<input asp-for="@Model.AppUser.FulName" class="form-control" />
+							<span asp-validation-for="@Model.AppUser.Name"></span>
+						</div>
+						<div class="card-group">
+							<label asp-for="@Model.AppUser.Email"></label>
+							<input asp-for="@Model.AppUser.Email" class="form-control" />
+							<span asp-validation-for="@Model.AppUser.Email"></span>
+						</div>
+						<div class="card-group">
+							<label asp-for="@Model.AppUser.Mobile"></label>
+							<input asp-for="@Model.AppUser.Mobile" class="form-control" />
+							<span asp-validation-for="@Model.AppUser.Mobile"></span>
+						</div>
+						<div class="card-group">
+							<label asp-for="@Model.AppUser.Address"></label>
+							<input asp-for="@Model.AppUser.Address" class="form-control" />
+							<span asp-validation-for="@Model.AppUser.Address"></span>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<table class="table table-borderless">
+							<tr>
+								<th>Activity</th>
+								<th>Price</th>
+								<th></th>
+							</tr>
+							<tbody>
+								@foreach (var item in Model.ShoppingCarts)
+								{
+									<tr>
+										<td>@item.Activity.ActivittyName</td>
+										<td>@item.PriceSelected</td>
+									</tr>
+								}
+
+							</tbody>
+							<tfoot>
+								<tr><td>Total:</td>
+								<td>555</td>
+								</tr>
+							</tfoot>
+						</table>
+						
+					</div>
+
+				</div>
+				</div>
+				
+		</form>
+	</div>
+</div>
