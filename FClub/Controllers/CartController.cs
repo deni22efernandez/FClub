@@ -23,18 +23,20 @@ namespace FClub.Controllers
 		public async Task<IActionResult> Index()
 		{
 			var sessionCarts = HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart") ?? default;
-			List<Activitty> actList = new List<Activitty>();
+			
 			foreach (var item in sessionCarts)
 			{
-				Activitty activitty = await _unitOfWork.ActivittyRepository.GetAsync(x => x.Id == item.ActivityId);
-				actList.Add(activitty);
+				item.Activity = await _unitOfWork.ActivittyRepository.GetAsync(x => x.Id == item.ActivityId, includeProperties:"FromToPeriod");				
 			}
-			CartIndexVM cartIndexVM = new CartIndexVM()
-			{
-				ShoppingCarts = sessionCarts,
-				Activitties = actList
-			};
-			return View(cartIndexVM);
+			
+			return View(sessionCarts);
+		}
+		public IActionResult Remove(int id)
+		{
+			var sessionCarts = HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart") ?? default;
+			sessionCarts = sessionCarts.Where(x => x.ActivityId != id);
+			HttpContext.Session.SetSession<IEnumerable<ShoppingCart>>("sessionCart", sessionCarts);
+			return RedirectToAction(nameof(Index));
 		}
 	}
 }

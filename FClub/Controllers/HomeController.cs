@@ -56,6 +56,20 @@ namespace FClub.Controllers
 				PriceSelected = carts.Where(x => x.ActivityId == id).Select(y => y.PriceSelected).FirstOrDefault(),
 				InCart = carts.Any(x=>x.ActivityId==id)
 			};
+
+			if (homeDetailsVM.PriceSelected != 0)
+			{
+				if (homeDetailsVM.PriceSelected == homeDetailsVM.Activity.FreePass)
+					TempData["radio"] = 4;
+				else if (homeDetailsVM.PriceSelected == homeDetailsVM.Activity.PricePerClass)
+					TempData["radio"] = 1;
+				else if (homeDetailsVM.PriceSelected == homeDetailsVM.Activity.PricePerMonth)
+					TempData["radio"] = 2;
+				else
+					TempData["radio"] = 3;
+			}
+			
+
 			return View(homeDetailsVM);
 		}
 		[HttpPost]
@@ -90,11 +104,19 @@ namespace FClub.Controllers
 					carts = HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").ToList();
 				}
 
-				carts.Add(new ShoppingCart
+				if (carts.Count() > 0 && carts.Where(x=>x.ActivityId==homeDetailsVM.Activity.Id).Count() > 0)
 				{
-					ActivityId = homeDetailsVM.Activity.Id,
-					PriceSelected = price
-				});
+					carts.Where(x => x.ActivityId == homeDetailsVM.Activity.Id).FirstOrDefault().PriceSelected = price;
+				}
+				else
+				{
+					carts.Add(new ShoppingCart
+					{
+						ActivityId = homeDetailsVM.Activity.Id,
+						PriceSelected = price
+					});
+				}
+				
 
 				HttpContext.Session.SetSession<IEnumerable<ShoppingCart>>("sessionCart", carts);
 

@@ -1,9 +1,11 @@
-﻿@model FClub.Models.Models.ViewModels.CartIndexVM
-
-@if (Model.ShoppingCarts.Any())
+﻿@model IEnumerable<FClub.Models.Models.DTOs.ShoppingCart>
+@{ 
+	var total = 0;
+}
+@if (Model.Any())
 {
-	<div class="container-fluid">
-		<div class="card col-md-12">
+	<div class="container-fluid py-3">
+		<div class="col-md-12">
 			<div class="card-header bg-dark text-light rounded">
 				<h3 style="display:inline-block"><i class="fas fa-shopping-cart"></i> &nbsp; Shopping cart items</h3>
 				<a asp-controller="Home" asp-action="Index" class="btn btn-outline-success offset-5">Continue shopping</a>
@@ -11,28 +13,45 @@
 			</div>
 			<div class="card-body border">
 				<div>
-					<table>
-						<tr>
-							<th>Activity</th>&nbsp;
-							<th>Price</th>&nbsp;
-							<th></th>
-						</tr>
-						<tbody>
-
-							@foreach (var item in Model.Activitties)
-							{
-								<tr>
-									<td>@item.ActivittyName</td>&nbsp;
-
-									<td>$ @Model.ShoppingCarts.Where(x => x.ActivityId == item.Id).Select(x => x.PriceSelected.ToString()).FirstOrDefault()</td>&nbsp;
-
-									<td></td>
-								</tr>
-
-							}
-
-						</tbody>
-					</table>
+					<form method="post">
+						<table class="table table-borderless table-responsive">
+							<tr>
+								<th>Activity</th>
+								<th>Price</th>
+								<th></th>
+							</tr>
+							<tbody>
+								@foreach (var item in Model)
+								{
+									{ total = total + item.PriceSelected; }
+									<tr>
+										<td>@item.Activity.ActivittyName</td>
+										<td>
+											$@item.PriceSelected
+											(
+											@if (item.PriceSelected == item.Activity.FreePass)
+											{<label asp-for="@item.Activity.FreePass"></label>}
+											else if (item.PriceSelected == item.Activity.PricePerClass)
+											{<label asp-for="@item.Activity.PricePerClass"></label>}
+											else if (item.PriceSelected == item.Activity.PricePerMonth)
+											{<label asp-for="@item.Activity.PricePerMonth"></label>}
+											else
+											{<label asp-for="@item.Activity.PricePer3Months"></label>}
+											)
+										</td>
+										<td>
+											<a asp-action="Remove" asp-route-id="@item.ActivityId" class="btn btn-danger">Remove from cart</a>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</form>
+					<div>
+						<label class="ml-3 text-danger">Total:</label>
+						<span class="ml-lg-5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$@total</span>
+						<button type="submit" class=" btn btn-outline-success offset-2">Continue</button>
+					</div>
 				</div>
 			</div>
 		</div>
