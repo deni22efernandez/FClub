@@ -1,4 +1,5 @@
 ﻿using FClub.Data.Repository.IRepository;
+using FClub.Models.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,9 +17,22 @@ namespace FClub.Controllers
 		{
 			_unitOfWork = unitOfWork;
 		}
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(int currentPage=1)
 		{
-			return View(await _unitOfWork.OrderHeaderRepository.GetAllAync(includeProperties:"AppUser"));
+			var headers = await _unitOfWork.OrderHeaderRepository.GetAllAync(includeProperties: "AppUser");
+			var headersCount = headers.Count();
+			OrderIndexVM orderIndexVM = new OrderIndexVM
+			{
+				OrderHeaders = headers.Skip((currentPage-1)*2).Take(2),
+				paginationModel = new Models.Models.PaginationModel
+				{
+					CurrentPage = currentPage,
+					ItemsPerPage = 2,
+					TotalIems = headersCount,
+					Uri = "/Order/Index?currentPage=:"
+				}
+			};
+			return View(orderIndexVM);
 		}
 	}
 }

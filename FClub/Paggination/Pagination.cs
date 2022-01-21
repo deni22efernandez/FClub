@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using FClub.Models.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace FClub.Paggination
@@ -6,7 +7,7 @@ namespace FClub.Paggination
 	[HtmlTargetElement("div", Attributes ="Pagin")]
 	public class Pagination : TagHelper
 	{
-		public PageInfo Pagin { get; set; }
+		public PaginationModel Pagin { get; set; }
 		public bool ClassEnabled { get; set; }
 		public string PageClass { get; set; }
 		public string PageClassNormal { get; set; }
@@ -14,7 +15,7 @@ namespace FClub.Paggination
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
 			var result = new TagBuilder("div");
-			for (int i = 1; i < Pagin.TotalPages; i++)
+			for (int i = 1; i <= Pagin.TotalPages; i++)
 			{
 				TagBuilder builder = new TagBuilder("a");
 				string url = Pagin.Uri.Replace(":", i.ToString());

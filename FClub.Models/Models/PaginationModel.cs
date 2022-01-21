@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FClub.Paggination
+namespace FClub.Models.Models
 {
-	public class PageInfo
+	public class PaginationModel
 	{
 		public int TotalIems { get; set; }
 		public int TotalPages => (int)Math.Ceiling((decimal)TotalIems / ItemsPerPage);
