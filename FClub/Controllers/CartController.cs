@@ -157,7 +157,8 @@ namespace FClub.Controllers
 			return RedirectToAction("Index", "Home");
 		}
 		public IActionResult OrderConfirmation(int orderId)
-		{			
+		{
+			HttpContext.Session.Clear();
 			return View(orderId);
 		}
 	}
