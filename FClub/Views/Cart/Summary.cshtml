@@ -1,4 +1,5 @@
 ﻿@model FClub.Models.Models.ViewModels.SummaryVM
+@{ var total = 0;}
 <div class="container-fluid">
 	<div class="card">
 		<div class="card-header">
@@ -43,21 +44,20 @@
 										<td>@item.Activity.ActivittyName</td>
 										<td>@item.PriceSelected</td>
 									</tr>
+									{ total = total + item.PriceSelected;}
 								}
 
 							</tbody>
 							<tfoot>
-								<tr><td>Total:</td>
-								<td>555</td>
+								<tr>
+									<td>Total:</td>
+									<td>@total</td>
 								</tr>
 							</tfoot>
 						</table>
-						
 					</div>
-
 				</div>
-				</div>
-				
+			</div>
 		</form>
 	</div>
 </div>

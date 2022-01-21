@@ -52,8 +52,7 @@ namespace FClub.Controllers
 				ShoppingCarts = carts,
 				AppUser = await _unitOfWork.AppUserRepository.GetAsync(x => x.Id == userId)
 			};
-				//create orderheader
-				//enroll after confirmed
+		
 
 			return View(summaryVM);
 		}
@@ -63,6 +62,11 @@ namespace FClub.Controllers
 			sessionCarts = sessionCarts.Where(x => x.ActivityId != id);
 			HttpContext.Session.SetSession<IEnumerable<ShoppingCart>>("sessionCart", sessionCarts);
 			return RedirectToAction(nameof(Index));
+		}
+		public IActionResult ClearCart()
+		{
+			HttpContext.Session.Clear();
+			return RedirectToAction("Index", "Home");
 		}
 	}
 }

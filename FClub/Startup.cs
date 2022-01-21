@@ -1,3 +1,4 @@
+using FClub.BraintreeConfig;
 using FClub.Data;
 using FClub.Data.Repository;
 using FClub.Data.Repository.IRepository;
@@ -41,6 +42,8 @@ namespace FClub
 				});
 			services.AddSession();
 			services.AddHttpContextAccessor();
+			services.Configure<BrainTreeConfig>(Configuration.GetSection("BrainTree"));
+			services.AddScoped<IBrainTreeGate, BrainTreeGate>();
 			services.AddControllersWithViews();
 		}
 
