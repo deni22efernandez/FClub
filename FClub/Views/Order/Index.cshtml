@@ -8,7 +8,6 @@
 						<th>Order #</th>
 						<th>Customer name</th>
 						<th>Order status</th>
-						<th>Payment status</th>
 						<th>Order total</th>
 						<th></th>
 					</tr>
@@ -19,7 +18,6 @@
 								<td>@item.Id</td>
 								<td>@item.AppUser.FulName</td>
 								<td>@item.OrderStatus</td>
-								<td>@item.PaymentStatus</td>
 								<td>$ @item.OrderTotal</td>
 								<td>
 									<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">Details</a>

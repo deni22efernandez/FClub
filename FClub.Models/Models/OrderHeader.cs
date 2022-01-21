@@ -17,8 +17,7 @@ namespace FClub.Models.Models
 		public DateTime OrderDate { get; set; }
 		[Required]
 		public int OrderTotal { get; set; }
-		public string OrderStatus { get; set; }
-		public string PaymentStatus { get; set; }
+		public string OrderStatus { get; set; }	
 		public string TransactionId { get; set; }
 		public  string Email { get; set; }
 		public  string Mobile { get; set; }
