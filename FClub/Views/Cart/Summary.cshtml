@@ -7,19 +7,23 @@
 		</div>
 		<form method="post" id="payment-form">
 			<input type="hidden" asp-for="AppUser.Id" />
-			<input type="hidden" asp-for="Total" value=@total />
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-6">
 						<hr />
 						<div class="card-group">
-							<label asp-for="@Model.AppUser.FulName"></label>
-							<input asp-for="@Model.AppUser.FulName" class="form-control" />
+							<label asp-for="@Model.AppUser.Name"></label>
+							<input asp-for="@Model.AppUser.Name" class="form-control" />
 							<span asp-validation-for="@Model.AppUser.Name"></span>
 						</div>
 						<div class="card-group">
+							<label asp-for="@Model.AppUser.LastName"></label>
+							<input asp-for="@Model.AppUser.LastName" class="form-control" />
+							<span asp-validation-for="@Model.AppUser.LastName"></span>
+						</div>
+						<div class="card-group">
 							<label asp-for="@Model.AppUser.Email"></label>
-							<input asp-for="@Model.AppUser.Email" class="form-control" />
+							<input asp-for="@Model.AppUser.Username" class="form-control" />
 							<span asp-validation-for="@Model.AppUser.Email"></span>
 						</div>
 						<div class="card-group">

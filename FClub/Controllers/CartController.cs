@@ -1,7 +1,10 @@
-﻿using FClub.BraintreeConfig;
+﻿using Braintree;
+using FClub.BraintreeConfig;
+using FClub.CustomMapper;
 using FClub.Data.Repository.IRepository;
 using FClub.Models.Models;
 using FClub.Models.Models.DTOs;
+using FClub.Models.Models.DTOs.AppUserDtos;
 using FClub.Models.Models.ViewModels;
 using FClub.SessionXtention;
 using Microsoft.AspNetCore.Authorization;
@@ -51,10 +54,11 @@ namespace FClub.Controllers
 			}
 			var claim = (ClaimsIdentity)User.Identity;
 			var userId = Convert.ToInt32(claim.FindFirst(ClaimTypes.NameIdentifier).Value);
+			var user = await _unitOfWork.AppUserRepository.GetAsync(x => x.Id == userId);
 			SummaryVM summaryVM = new SummaryVM
 			{
 				ShoppingCarts = carts,
-				AppUser = await _unitOfWork.AppUserRepository.GetAsync(x => x.Id == userId)
+				AppUser = user.Map<AppUserDto>()
 			};
 			var gateway = _brainTree.GetGateWay();
 			var clientToken = gateway.ClientToken.Generate();
@@ -69,21 +73,27 @@ namespace FClub.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				IList<ShoppingCart> carts = new List<ShoppingCart>();
+				if (HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart") != null &&
+				HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").Count() > 0)
+				{
+					carts = HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").ToList();
+				}
 				OrderHeader orderHeader = new OrderHeader
 				{
-					AppUser = await _unitOfWork.AppUserRepository.GetAsync(x => x.Id == summaryVM.AppUser.Id),
+					AppUser = await _unitOfWork.AppUserRepository.GetAsync(x => x.Id == summaryVM.AppUser.Id),					
 					Address = summaryVM.AppUser.Address,
 					Email = summaryVM.AppUser.Email,
 					Mobile = summaryVM.AppUser.Mobile,
 					OrderDate = DateTime.Today,
 					OrderStatus = "pending",
-					OrderTotal = summaryVM.Total,//check//sUM(SUMMARYvM.PRICESELECTED)			 
+					OrderTotal = carts.Sum(x=>x.PriceSelected)		 
 
 				};
 				await _unitOfWork.OrderHeaderRepository.CreateAsync(orderHeader);//check id created
 				if(await _unitOfWork.SaveAsync())
 				{
-					foreach (var item in summaryVM.ShoppingCarts)
+					foreach (var item in carts)
 					{
 						OrderDetail orderDetail = new OrderDetail
 						{
@@ -95,7 +105,37 @@ namespace FClub.Controllers
 					}
 					if(await _unitOfWork.SaveAsync())
 					{
-						return RedirectToAction(nameof(OrderConfirmation));
+						string nonceFromTheClient = formCollection["payment_method_nonce"];
+
+						var request = new TransactionRequest
+						{
+							Amount = Convert.ToDecimal(orderHeader.OrderTotal),
+							PaymentMethodNonce = nonceFromTheClient,
+							OrderId = orderHeader.Id.ToString(),
+							Options = new TransactionOptionsRequest
+							{
+								SubmitForSettlement = true
+							}
+						};
+
+						var gateway = _brainTree.GetGateWay();
+						Result<Transaction> result = gateway.Transaction.Sale(request);
+
+						if (result.Target.ProcessorResponseText == "Approved")
+						{
+							orderHeader.TransactionId = result.Target.Id;
+							orderHeader.OrderStatus = "Approved";
+						}
+						else
+						{
+							orderHeader.OrderStatus = "Cancelled";
+						}
+						//send email
+						//Message msg = new Message(new string[] { customer.UserName },
+						//"Order confirmation", $"Order id {orderHeader.Id} has been approved!");
+						//_emailSender.SendEmail(msg);
+						await _unitOfWork.SaveAsync();
+						return RedirectToAction(nameof(OrderConfirmation), new { orderId=orderHeader.Id});
 					}
 				}
 				//error while creating order
@@ -116,10 +156,9 @@ namespace FClub.Controllers
 			HttpContext.Session.Clear();
 			return RedirectToAction("Index", "Home");
 		}
-		public IActionResult OrderConfirmation()
-		{
-			//ORDEROnUMBER
-			return View();
+		public IActionResult OrderConfirmation(int orderId)
+		{			
+			return View(orderId);
 		}
 	}
 }
