@@ -17,6 +17,9 @@ namespace FClub.Data.Repository
 			ShiftRepository = new ShiftRepository(contxt);
 			WeekDaysRepository = new WeekDaysRepository(contxt);
 			ActivittyDaysRepository = new ActivittyDaysRepository(contxt);
+			OrderDetailRepository = new OrderDetailRepository(contxt);
+			OrderHeaderRepository = new OrderHeaderRepository(contxt);
+
 		}
 
 		public IActivittyRepository ActivittyRepository { get; private set; }
@@ -30,15 +33,19 @@ namespace FClub.Data.Repository
 
 		public IActivittyDaysRepository ActivittyDaysRepository { get; private set; }
 
+		public IOrderHeaderRepository OrderHeaderRepository { get; private set; }
+
+		public IOrderDetailRepository OrderDetailRepository { get; private set; }
+
 		public void Dispose()
 		{
-			 _contxt.Dispose();
+			_contxt.Dispose();
 		}
 
 		public async Task<bool> SaveAsync()
 		{
 			var result = await _contxt.SaveChangesAsync();
-			return result!=0 ? true: false;
+			return result != 0 ? true : false;
 		}
 	}
 }

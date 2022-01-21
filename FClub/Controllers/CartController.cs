@@ -1,9 +1,11 @@
-﻿using FClub.Data.Repository.IRepository;
+﻿using FClub.BraintreeConfig;
+using FClub.Data.Repository.IRepository;
 using FClub.Models.Models;
 using FClub.Models.Models.DTOs;
 using FClub.Models.Models.ViewModels;
 using FClub.SessionXtention;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,9 +19,11 @@ namespace FClub.Controllers
 	public class CartController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		public CartController(IUnitOfWork unitOfWork)
+		private readonly IBrainTreeGate _brainTree;
+		public CartController(IUnitOfWork unitOfWork, IBrainTreeGate brainTree)
 		{
 			_unitOfWork = unitOfWork;
+			_brainTree = brainTree;
 		}
 		public async Task<IActionResult> Index()
 		{
@@ -52,8 +56,52 @@ namespace FClub.Controllers
 				ShoppingCarts = carts,
 				AppUser = await _unitOfWork.AppUserRepository.GetAsync(x => x.Id == userId)
 			};
-		
+			var gateway = _brainTree.GetGateWay();
+			var clientToken = gateway.ClientToken.Generate();
+			ViewBag.ClientToken = clientToken;
 
+
+			return View(summaryVM);
+		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Summary(IFormCollection formCollection, SummaryVM summaryVM)
+		{
+			if (ModelState.IsValid)
+			{
+				OrderHeader orderHeader = new OrderHeader
+				{
+					AppUser = await _unitOfWork.AppUserRepository.GetAsync(x => x.Id == summaryVM.AppUser.Id),
+					Address = summaryVM.AppUser.Address,
+					Email = summaryVM.AppUser.Email,
+					Mobile = summaryVM.AppUser.Mobile,
+					OrderDate = DateTime.Today,
+					OrderStatus = "pending",
+					OrderTotal = summaryVM.Total,//check//sUM(SUMMARYvM.PRICESELECTED)			 
+
+				};
+				await _unitOfWork.OrderHeaderRepository.CreateAsync(orderHeader);//check id created
+				if(await _unitOfWork.SaveAsync())
+				{
+					foreach (var item in summaryVM.ShoppingCarts)
+					{
+						OrderDetail orderDetail = new OrderDetail
+						{
+							ActivittyId = item.ActivityId,
+							OrderHeaderId = orderHeader.Id,
+							Price = item.PriceSelected
+						};
+						await _unitOfWork.OrderDetailRepository.CreateAsync(orderDetail);
+					}
+					if(await _unitOfWork.SaveAsync())
+					{
+						return RedirectToAction(nameof(OrderConfirmation));
+					}
+				}
+				//error while creating order
+				
+			}
+			//error in modelState
 			return View(summaryVM);
 		}
 		public IActionResult Remove(int id)
@@ -67,6 +115,11 @@ namespace FClub.Controllers
 		{
 			HttpContext.Session.Clear();
 			return RedirectToAction("Index", "Home");
+		}
+		public IActionResult OrderConfirmation()
+		{
+			//ORDEROnUMBER
+			return View();
 		}
 	}
 }

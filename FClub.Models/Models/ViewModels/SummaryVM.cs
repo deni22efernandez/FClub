@@ -9,5 +9,6 @@ namespace FClub.Models.Models.ViewModels
 	{
 		public AppUser AppUser { get; set; }
 		public IEnumerable<ShoppingCart> ShoppingCarts { get; set; }
+		public int Total { get; set; }
 	}
 }

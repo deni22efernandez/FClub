@@ -16,5 +16,7 @@ namespace FClub.Data.Repository.IRepository
 		IShiftRepository ShiftRepository { get;  }
 		IWeekDaysRepository WeekDaysRepository { get; }
 		IActivittyDaysRepository ActivittyDaysRepository { get; }
+		IOrderHeaderRepository OrderHeaderRepository { get; }
+		IOrderDetailRepository OrderDetailRepository { get; }
 	}
 }
