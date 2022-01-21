@@ -1,0 +1,90 @@
+﻿@model FClub.Models.Models.ViewModels.OrderDetailsVM
+<div class="container-fluid">
+	<div class="card">
+		<div class="card-header">
+			<h3>Details for order number: @Model.OrderHeader.Id</h3>
+		</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6">
+						<hr />
+						<div class="card-group">
+							<label asp-for="@Model.OrderHeader.Id"></label>
+							<input asp-for="@Model.OrderHeader.Id" class="form-control" readonly />
+						</div>
+						<div class="card-group">
+							<label asp-for="@Model.OrderHeader.OrderStatus"></label>
+							<input asp-for="@Model.OrderHeader.OrderStatus" class="form-control" readonly />
+						</div>
+						<div class="card-group">
+							<label asp-for="@Model.OrderHeader.OrderDate"></label>
+							<input asp-for="@Model.OrderHeader.OrderDate" class="form-control" readonly />
+						</div>
+						<div class="card-group">
+							<label asp-for="@Model.OrderHeader.TransactionId"></label>
+							<input asp-for="@Model.OrderHeader.TransactionId" class="form-control" readonly />
+						</div>
+						<div class="card-group">
+							<label asp-for="@Model.OrderHeader.AppUser.FulName"></label>
+							<input asp-for="@Model.OrderHeader.AppUser.FulName" class="form-control" readonly />
+						</div>
+						<div class="card-group">
+							<label asp-for="@Model.OrderHeader.AppUser.Email"></label>
+							<input asp-for="@Model.OrderHeader.AppUser.Email" class="form-control" readonly />
+						</div>
+						<div class="card-group">
+							<label asp-for="@Model.OrderHeader.AppUser.Address"></label>
+							<input asp-for="@Model.OrderHeader.AppUser.Address" class="form-control" readonly />
+						</div>
+						<div class="card-group">
+							<label asp-for="@Model.OrderHeader.AppUser.Mobile"></label>
+							<input asp-for="@Model.OrderHeader.AppUser.Mobile" class="form-control" readonly />
+						</div>
+					</div>
+					<div class="col-md-6">
+						<table class="table table-borderless">
+							<tr>
+								<th>Activity</th>
+								<th>Price</th>
+								<th></th>
+							</tr>
+							<tbody>
+								@foreach (var item in Model.OrderDetails)
+								{
+									<tr>
+										<td>@item.Activitty.ActivittyName</td>
+										<td>$ @item.Price</td>
+									</tr>
+								}
+							</tbody>
+							<tfoot>
+								<tr>
+									<hr />
+									<td class="text-danger">Total:</td>
+									<td>$ @Model.OrderHeader.OrderTotal</td>
+								</tr>
+							</tfoot>
+						</table>
+						<br />
+						<hr />						
+						<div class="card-footer">
+							@if (Model.OrderHeader.OrderStatus == "Approved")
+							{
+								<a asp-action="StartProcessing" asp-route-id="@Model.OrderHeader.Id" class="form-control btn btn-warning">Start processing</a>
+							}
+							<br />
+							@if (Model.OrderHeader.OrderStatus == "Processing")
+							{
+								<a  asp-controller="Enrollment" asp-action="Create" asp-route-id="@Model.OrderHeader.Id" class="form-control btn btn-success">Enroll</a>
+							}
+							<br />
+							@if (Model.OrderHeader.OrderStatus != "Cancelled" || Model.OrderHeader.OrderStatus != "Refunded")
+							{
+								<a asp-action="Cancel"  asp-route-id="@Model.OrderHeader.Id" class="form-control btn btn-danger">Cancel order</a>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
+</div>

@@ -34,5 +34,27 @@ namespace FClub.Controllers
 			};
 			return View(orderIndexVM);
 		}
+		[HttpGet]
+		public async Task<IActionResult> Details(int id)
+		{
+			OrderDetailsVM orderDetailsVM = new OrderDetailsVM
+			{
+				OrderHeader = await _unitOfWork.OrderHeaderRepository.GetAsync(x => x.Id == id, includeProperties: "AppUser"),
+				OrderDetails = await _unitOfWork.OrderDetailRepository.GetAllAync(x => x.OrderHeaderId == id, includeProperties:"Activitty")
+			};
+			return View(orderDetailsVM);
+		}
+		[HttpGet]
+		public async Task<IActionResult> StartProcessing(int id)
+		{
+			//change status to processing
+			return View(nameof(Index));
+		}
+		[HttpGet]
+		public async Task<IActionResult> Cancel(int id)
+		{
+			//change status to refunded/cancelled
+			return View(nameof(Index));
+		}
 	}
 }
