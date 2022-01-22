@@ -19,6 +19,7 @@ namespace FClub.Data.Repository
 			ActivittyDaysRepository = new ActivittyDaysRepository(contxt);
 			OrderDetailRepository = new OrderDetailRepository(contxt);
 			OrderHeaderRepository = new OrderHeaderRepository(contxt);
+			PeopleRepository = new PeopleRepository(contxt);
 
 		}
 
@@ -36,6 +37,8 @@ namespace FClub.Data.Repository
 		public IOrderHeaderRepository OrderHeaderRepository { get; private set; }
 
 		public IOrderDetailRepository OrderDetailRepository { get; private set; }
+
+		public IPeopleRepository PeopleRepository { get; private set; }
 
 		public void Dispose()
 		{

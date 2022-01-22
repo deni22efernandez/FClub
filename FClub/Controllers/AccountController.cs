@@ -34,7 +34,7 @@ namespace FClub.Controllers
 			if (ModelState.IsValid)
 			{
 				bool isAuthenticated = false;
-				var user = await _unitOfWork.AppUserRepository.GetAsync(x => x.Username == loginVM.Username && x.Password == loginVM.Password);
+				var user = await _unitOfWork.PeopleRepository.GetAsync(x => x.Username == loginVM.Username && x.Password == loginVM.Password);
 				
 				if (user != null)
 				{

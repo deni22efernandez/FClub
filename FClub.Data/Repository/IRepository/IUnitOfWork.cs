@@ -18,5 +18,6 @@ namespace FClub.Data.Repository.IRepository
 		IActivittyDaysRepository ActivittyDaysRepository { get; }
 		IOrderHeaderRepository OrderHeaderRepository { get; }
 		IOrderDetailRepository OrderDetailRepository { get; }
+		IPeopleRepository PeopleRepository { get; }
 	}
 }

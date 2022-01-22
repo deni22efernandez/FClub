@@ -11,6 +11,10 @@
     <Compile Remove="Migrations\20220113134054_addActivittyDaysTable.Designer.cs" />
     <Compile Remove="Migrations\20220113142603_new.cs" />
     <Compile Remove="Migrations\20220113142603_new.Designer.cs" />
+    <Compile Remove="Migrations\20220122224908_Admin.cs" />
+    <Compile Remove="Migrations\20220122224908_Admin.Designer.cs" />
+    <Compile Remove="Migrations\20220122225030_Admin.cs" />
+    <Compile Remove="Migrations\20220122225030_Admin.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
