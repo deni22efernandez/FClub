@@ -75,7 +75,7 @@
 							<br />
 							@if (Model.OrderHeader.OrderStatus == "Processing")
 							{
-								<a  asp-controller="Enrollment" asp-action="Create" asp-route-id="@Model.OrderHeader.Id" class="form-control btn btn-success">Enroll</a>
+								<a  asp-controller="Enrollment" asp-action="Create" asp-route-id="@Model.OrderHeader.Id" class="form-control btn btn-success">Confirm Enrollment</a>
 							}
 							<br />
 							@if (Model.OrderHeader.OrderStatus != "Cancelled" || Model.OrderHeader.OrderStatus != "Refunded")

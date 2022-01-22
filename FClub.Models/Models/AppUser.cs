@@ -18,7 +18,7 @@ namespace FClub.Models.Models
 		[Required]
 		[DataType(DataType.Password)]
 		public override string Password { get; set; }
-		public string EnrollmentDate { get; set; }
+		
 		public ICollection<Enrollment> Enrollments { get; set; }
 		
 	

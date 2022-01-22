@@ -23,9 +23,9 @@ namespace FClub.Models.Models
 		public Instructor Instructor { get; set; }
 	
 		public ICollection<ActivittyDays> ActivittyDays { get; set; }
-		[Display(Name = "Price per class")]
+		//[Display(Name = "Price per class")]
 	
-		public int PricePerClass { get; set; }
+		//public int PricePerClass { get; set; }
 		[Display(Name = "Price per month")]
 
 		public int PricePerMonth { get; set; }

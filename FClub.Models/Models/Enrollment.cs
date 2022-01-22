@@ -18,6 +18,8 @@ namespace FClub.Models.Models
 		public int AppUserId { get; set; }
 		[ForeignKey("AppUserId")]
 		public AppUser AppUser { get; set; }
-		
+		public DateTime StartDate { get; set; }
+		public DateTime EndDate { get; set; }
+
 	}
 }
