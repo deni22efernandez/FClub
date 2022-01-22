@@ -8,7 +8,7 @@
 		<div class="col-md-12">
 			<div class="card-header bg-dark text-light rounded">
 				<h3 style="display:inline-block"><i class="fas fa-shopping-cart"></i> &nbsp; Shopping cart items</h3>
-				<a asp-controller="Home" asp-action="Index" class="btn btn-outline-success offset-5">Continue shopping</a>
+				<a asp-controller="Home" asp-action="Index" class="btn btn-outline-success offset-5">Continue shopping</a>&nbsp;
 				<a asp-action="ClearCart" class="btn btn-outline-danger">Clear cart</a>
 			</div>
 			<div class="card-body border">
@@ -39,7 +39,7 @@
 										</td>
 										<td>
 											<a asp-action="Remove" asp-route-id="@item.ActivityId" class="btn btn-danger">
-												<i class="fas fa-trash"></i>Remove from cart
+												<i class="fas fa-trash"></i>&nbsp;Remove from cart
 											</a>
 										</td>
 									</tr>

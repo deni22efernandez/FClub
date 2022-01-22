@@ -5,32 +5,25 @@
 		<div class="col-md-8">
 			@foreach (var item in Model)
 			{
-				<div class="card">
+				<div class="card rounded">
 					<div class="card-header">
-						<label>@item.ActivittyName</label>
-					</div>
-					<div class="card-body">
-						<div class="py-3">
-						<img src="@item.Image" class="card-img img-fluid" />
-						</div>
-						<div class="py-3">
-							<span class="btn btn-info" style="opacity:45%">@item.FromToPeriod.Period</span>
+						<h4 style="display:inline">@item.ActivittyName</h4>						
+							<span class="btn btn-info offset-2" style="opacity:45%">@item.FromToPeriod.Period</span>
 							@foreach (var items in item.ActivittyDays)
 							{
 								<span class="btn btn-info" style="opacity:45%">@items.WeekDay.WeekDay</span>
 							}
-
-						</div>
-						<div class="card-columns py-3">
-							
-							<label asp-for="@item.FreePass"></label>&nbsp;
-							<p>$@item.FreePass</p>
+					</div>
+					<div class="card-body">
+						<div class="py-3">
+						<img src="@item.Image" class="card-img img-fluid" />
 						</div>						
 					</div>
-					<div class="card-footer">
-						<a asp-action="Details" asp-route-id="@item.Id" class="form-control btn btn-info">Details</a>
+					<div class="card-footer">						
+							<a asp-action="Details" asp-route-id="@item.Id" class=" form-control btn btn-outline-info">Details</a>					
 					</div>
 				</div>
+				<br />
 			}
 		</div>
 		<div class="col-md-2"></div>
