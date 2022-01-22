@@ -35,13 +35,32 @@ namespace FClub.Controllers
 			{
 				bool isAuthenticated = false;
 				var user = await _unitOfWork.AppUserRepository.GetAsync(x => x.Username == loginVM.Username && x.Password == loginVM.Password);
+				
 				if (user != null)
 				{
 					ClaimsIdentity claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-					claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-					claimsIdentity.AddClaim(new Claim(ClaimTypes.Email, user.Username));
-					claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "User"));
-					isAuthenticated = true;
+					if (user.Discriminator == "AppUser") {
+						
+						claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+						claimsIdentity.AddClaim(new Claim(ClaimTypes.Email, user.Username));
+						claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "User"));
+						isAuthenticated = true;
+					}
+					else if (user.Discriminator == "Instructor")
+					{
+
+						claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+						claimsIdentity.AddClaim(new Claim(ClaimTypes.Email, user.Username));
+						claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Instructor"));
+						isAuthenticated = true;
+					}
+					else
+					{
+						claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+						claimsIdentity.AddClaim(new Claim(ClaimTypes.Email, user.Username));
+						claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
+						isAuthenticated = true;
+					}
 					if (isAuthenticated)
 					{
 						await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
@@ -75,7 +94,8 @@ namespace FClub.Controllers
 				var user = await _unitOfWork.AppUserRepository.GetAsync(x => x.Username == registerVM.Username);
 				if (user == null)
 				{
-					AppUser newUser = new AppUser { Username = registerVM.Username, Password = registerVM.Password };
+					AppUser newUser = registerVM.Map<AppUser>();
+					newUser.Email = newUser.Username;
 					await _unitOfWork.AppUserRepository.CreateAsync(newUser);
 					if (await _unitOfWork.SaveAsync())
 						//successfull registration msg

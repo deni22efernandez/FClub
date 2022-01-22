@@ -15,5 +15,9 @@ namespace FClub.Models.Models.ViewModels
 		[Display(Name = "ConfirmPassword")]
 		[Compare("Password", ErrorMessage ="Password dont match")]
 		public string ConfirmPassword { get; set; }
+		public  string Name { get; set; }
+		public  string LastName { get; set; }
+		public  string Mobile { get; set; }
+		public  string Address { get; set; }
 	}
 }

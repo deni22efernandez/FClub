@@ -10,6 +10,7 @@ namespace FClub.Models.Models
 		
 		public abstract int Id { get; set; }
 		public abstract string Name { get; set; }
+		public string Discriminator { get;  }
 		public abstract string LastName { get; set; }
 		public string FulName { get { return this.Name + ", " + this.LastName; } }
 		public abstract string Email { get; set; }
