@@ -30,8 +30,7 @@
 											(
 											@if (item.PriceSelected == item.Activity.FreePass)
 											{<label asp-for="@item.Activity.FreePass"></label>}
-											else if (item.PriceSelected == item.Activity.PricePerClass)
-											{<label asp-for="@item.Activity.PricePerClass"></label>}
+										
 											else if (item.PriceSelected == item.Activity.PricePerMonth)
 											{<label asp-for="@item.Activity.PricePerMonth"></label>}
 											else

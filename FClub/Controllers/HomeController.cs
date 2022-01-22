@@ -61,8 +61,8 @@ namespace FClub.Controllers
 			{
 				if (homeDetailsVM.PriceSelected == homeDetailsVM.Activity.FreePass)
 					TempData["radio"] = 4;
-				else if (homeDetailsVM.PriceSelected == homeDetailsVM.Activity.PricePerClass)
-					TempData["radio"] = 1;
+				//else if (homeDetailsVM.PriceSelected == homeDetailsVM.Activity.PricePerClass)
+				//	TempData["radio"] = 1;
 				else if (homeDetailsVM.PriceSelected == homeDetailsVM.Activity.PricePerMonth)
 					TempData["radio"] = 2;
 				else
@@ -81,9 +81,9 @@ namespace FClub.Controllers
 				var price = 0;
 				switch (priceSelected)
 				{
-					case 1:
-						price = homeDetailsVM.Activity.PricePerClass;
-						break;
+					//case 1:
+					//	price = homeDetailsVM.Activity.PricePerClass;
+					//	break;
 					case 2:
 						price = homeDetailsVM.Activity.PricePerMonth;
 						break;
