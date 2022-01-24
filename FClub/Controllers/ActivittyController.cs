@@ -185,14 +185,14 @@ namespace FClub.Controllers
 					}
 					var ImgName = Guid.NewGuid().ToString();
 					var extention = Path.GetExtension(files[0].FileName);
-					var uploads = Path.Combine(webRootPath,@"images\activities");				
+					var uploads = Path.Combine(webRootPath, $"images{Path.DirectorySeparatorChar}activities");				
 
 					using(var fileStream = new FileStream(Path.Combine(uploads,ImgName+extention), FileMode.Create))
 					{
 						files[0].CopyTo(fileStream);
 					}
 
-					model.Activity.Image = @"\images\activities\" + ImgName + extention;//
+					model.Activity.Image = $"{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}activities{Path.DirectorySeparatorChar}" + ImgName + extention;//
 				}
 				List<ActivittyDays> activitties = new List<ActivittyDays>();
 				foreach (var item in model.DaysSelected)
