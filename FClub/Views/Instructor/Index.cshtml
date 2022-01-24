@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<FClub.Models.Models.DTOs.InstructorDtos.InstructorGetDto>
+	<h3>Instructors</h3>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -22,7 +23,7 @@
                 @Html.DisplayFor(modelItem => item.FullName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.HireDate)
+                @item.HireDate.ToShortDateString()
             </td>
 			<td>
 				

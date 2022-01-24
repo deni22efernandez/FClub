@@ -13,7 +13,7 @@
 
 	<link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body>
+<body class="jumbotron">
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
 			<div class="container">
@@ -27,10 +27,25 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
 						</li>
+						@if (User.IsInRole("Admin"))
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-controller="Instructor" asp-action="Index">Instructors</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-controller="Activitty" asp-action="Index">Activitties</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-controller="Enrollment" asp-action="Index">Enrollments</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-controller="Order" asp-action="Index">Orders</a>
+							</li>
+						}
 					</ul>
 				</div>
 				@if (_context.HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart") != null &&
-						_context.HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").Count() > 0)
+					   _context.HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").Count() > 0)
 				{
 					var cart = _context.HttpContext.Session.GetSession<IEnumerable<ShoppingCart>>("sessionCart").Count();
 					<a class="nav-link offset-5" asp-controller="Cart" asp-action="Index">

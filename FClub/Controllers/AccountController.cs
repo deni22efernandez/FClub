@@ -114,6 +114,7 @@ namespace FClub.Controllers
 		}
 		public IActionResult Logout()
 		{
+			HttpContext.Session.Clear();
 			HttpContext.SignOutAsync();
 			return RedirectToAction("Index","Home");
 		}
