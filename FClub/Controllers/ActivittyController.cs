@@ -77,13 +77,13 @@ namespace FClub.Controllers
 					var rootPath = _hostEnv.WebRootPath;
 					var fileName = Guid.NewGuid().ToString();
 					var extention = Path.GetExtension(files[0].FileName);
-					var uploads = Path.Combine(rootPath, @"images\activities");
+					var uploads = Path.Combine(rootPath, $"images{Path.DirectorySeparatorChar}activities");
 
 					using(var fileStream= new FileStream(Path.Combine(uploads, fileName + extention), FileMode.Create))
 					{
 						files[0].CopyTo(fileStream);
 					}
-					model.Activity.Image = @"\images\activities\" + fileName + extention;
+					model.Activity.Image = $"{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}activities{Path.DirectorySeparatorChar}" + fileName + extention;
 				}
 				model.Activity.CurrentCapacity = model.Activity.TotalCapacity;
 				var actCreated = model.Activity.Map<Activitty>();
